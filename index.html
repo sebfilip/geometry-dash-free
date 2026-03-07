@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
                 <title>Geometry Dash Free</title>
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&display=swap");
@@ -26,13 +26,14 @@
         body {
             height: 100%;
             overflow-y: auto;
+            overscroll-behavior: none;
         }
 
         body {
             margin: 0;
             min-height: 100vh;
             display: block;
-            padding: 16px;
+            padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
             color: var(--text);
             font-family: "Chakra Petch", sans-serif;
             background:
@@ -82,6 +83,7 @@
         .stage {
             position: relative;
             overflow: auto;
+            touch-action: none;
         }
 
         .launcher {
@@ -243,29 +245,36 @@
             filter: drop-shadow(1px 1px 0 rgba(14, 68, 30, 0.35));
         }
 
-        .gd-icon-tools::before,
-        .gd-icon-tools::after {
-            content: "";
-            position: absolute;
-            background: #ffe2b4;
-            border: 2px solid rgba(62, 35, 8, 0.4);
-            border-radius: 3px;
+        .gd-icon-tools {
+            border-radius: 50%;
+            border: 0;
+            background: linear-gradient(135deg, #ffe090, #b184ff 72%);
+            box-shadow:
+                inset 0 2px 0 rgba(255, 255, 255, 0.38),
+                0 0 0 2px rgba(19, 8, 44, 0.45);
+            overflow: hidden;
         }
 
         .gd-icon-tools::before {
-            width: 20px;
-            height: 7px;
-            left: 9px;
-            top: 15px;
-            transform: rotate(35deg);
+            content: "";
+            position: absolute;
+            inset: 4px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 26%, #2f2f35, #17181f 68%);
         }
 
         .gd-icon-tools::after {
-            width: 20px;
-            height: 7px;
-            right: 8px;
-            top: 20px;
-            transform: rotate(-38deg);
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 62%;
+            height: 62%;
+            transform: translate(-50%, -50%) rotate(-18deg);
+            clip-path: polygon(50% 0%, 95% 38%, 77% 100%, 23% 100%, 5% 38%);
+            border: 3px solid #f8fbff;
+            border-radius: 2px;
+            filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.5));
         }
 
         .gd-menu-orbs {
@@ -527,8 +536,17 @@
             display: block;
             width: 100%;
             height: auto;
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
             background:
                 linear-gradient(to bottom, #1a457f 0%, #11325c 68%, #0c2647 68%, #0c2647 100%);
+        }
+
+        button,
+        select,
+        input {
+            touch-action: manipulation;
         }
 
         .overlay {
@@ -754,6 +772,10 @@
         }
 
         @media (max-width: 620px) {
+            body {
+                padding: 8px;
+            }
+
             .launcher-actions {
                 grid-template-columns: 1fr;
                 grid-template-areas:
@@ -3942,29 +3964,37 @@
             }
         });
 
-        canvas.addEventListener("pointerdown", () => {
+        canvas.addEventListener("pointerdown", (event) => {
             if (builderMode) {
+                handleBuilderPointer(event);
+                event.preventDefault();
                 return;
             }
             if (!pointerHeld) {
                 pointerHeld = true;
                 handleInputPress();
             }
+            event.preventDefault();
         });
 
-        canvas.addEventListener("click", (event) => {
-            if (!builderMode) {
-                return;
-            }
-            handleBuilderPointer(event);
+        canvas.addEventListener("pointerup", (event) => {
+            pointerHeld = false;
+            handleInputRelease();
+            event.preventDefault();
         });
 
-        canvas.addEventListener("pointerup", () => {
+        canvas.addEventListener("pointerleave", () => {
             pointerHeld = false;
             handleInputRelease();
         });
 
-        canvas.addEventListener("pointerleave", () => {
+        canvas.addEventListener("pointercancel", () => {
+            pointerHeld = false;
+            handleInputRelease();
+        });
+
+        window.addEventListener("blur", () => {
+            keyHeld = false;
             pointerHeld = false;
             handleInputRelease();
         });
