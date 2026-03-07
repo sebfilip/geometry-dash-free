@@ -1,0 +1,4260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Geometry Dash Free</title>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&display=swap");
+
+        :root {
+            --bg1: #0b2a4d;
+            --bg2: #00b7a8;
+            --bg3: #ffcd38;
+            --panel: rgba(255, 255, 255, 0.14);
+            --line: rgba(255, 255, 255, 0.35);
+            --text: #f3fbff;
+            --accent: #00ffd0;
+            --danger: #ff4969;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: block;
+            padding: 16px;
+            color: var(--text);
+            font-family: "Chakra Petch", sans-serif;
+            background:
+                radial-gradient(circle at 15% 15%, rgba(255, 255, 255, 0.25), transparent 35%),
+                radial-gradient(circle at 80% 75%, rgba(255, 205, 56, 0.35), transparent 35%),
+                linear-gradient(140deg, var(--bg1), var(--bg2) 55%, var(--bg3));
+        }
+
+        .app {
+            width: min(900px, 100%);
+            margin: 0 auto;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background: var(--panel);
+            backdrop-filter: blur(6px);
+            box-shadow: 0 24px 40px rgba(0, 0, 0, 0.28);
+            overflow: auto;
+        }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--line);
+            background: rgba(8, 31, 63, 0.35);
+        }
+
+        .title {
+            margin: 0;
+            font-size: clamp(1rem, 2.5vw, 1.4rem);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .score {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--accent);
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .stage {
+            position: relative;
+            overflow: auto;
+        }
+
+        .launcher {
+            position: absolute;
+            inset: 0;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            overflow-y: auto;
+            background:
+                radial-gradient(circle at 22% 18%, rgba(107, 214, 255, 0.18), transparent 35%),
+                radial-gradient(circle at 83% 74%, rgba(255, 210, 113, 0.18), transparent 38%),
+                linear-gradient(180deg, rgba(93, 40, 194, 0.88), rgba(107, 46, 217, 0.86) 36%, rgba(86, 35, 190, 0.9));
+            transition: opacity 180ms ease;
+        }
+
+        .launcher.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .launcher-card {
+            width: min(640px, 100%);
+            max-height: calc(100vh - 64px);
+            border: 2px solid rgba(255, 255, 255, 0.35);
+            border-radius: 20px;
+            padding: 18px 18px 14px;
+            overflow-y: auto;
+            background:
+                linear-gradient(180deg, rgba(129, 56, 241, 0.95), rgba(93, 44, 198, 0.94) 56%, rgba(80, 35, 178, 0.94));
+            box-shadow:
+                inset 0 2px 0 rgba(255, 255, 255, 0.35),
+                0 24px 36px rgba(15, 2, 44, 0.45);
+            text-align: center;
+        }
+
+        .gd-logo-wrap {
+            display: grid;
+            justify-items: center;
+            gap: 4px;
+        }
+
+        .gd-logo {
+            margin: 0;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: #f4ff89;
+            text-shadow:
+                -2px 0 #1e4f21,
+                2px 0 #1e4f21,
+                0 -2px #1e4f21,
+                0 2px #1e4f21,
+                0 5px 0 rgba(0, 0, 0, 0.28);
+        }
+
+        .gd-subtitle {
+            margin: 0;
+            color: #f7f0ff;
+            font-size: 0.9rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            opacity: 0.9;
+        }
+
+        .launcher-actions {
+            margin-top: 18px;
+            display: grid;
+            grid-template-columns: 1fr 1.3fr 1fr;
+            grid-template-areas: "left center right";
+            gap: 14px;
+            align-items: end;
+        }
+
+        .launcher-actions button {
+            min-height: 112px;
+            border: 2px solid rgba(20, 20, 20, 0.42);
+            border-radius: 18px;
+            display: grid;
+            justify-items: center;
+            align-content: center;
+            gap: 8px;
+            padding: 10px;
+            box-shadow:
+                inset 0 3px 0 rgba(255, 255, 255, 0.34),
+                0 8px 0 rgba(33, 14, 88, 0.34);
+            transform-origin: center;
+        }
+
+        .launcher-actions button:hover {
+            transform: translateY(-2px) scale(1.01);
+        }
+
+        .launcher-actions button:active {
+            transform: translateY(1px);
+        }
+
+        #hackVersionBtn {
+            grid-area: left;
+        }
+
+        #normalVersionBtn {
+            grid-area: center;
+            min-height: 142px;
+            border-radius: 22px;
+            gap: 10px;
+        }
+
+        #geodeVersionBtn {
+            grid-area: right;
+        }
+
+        .gd-menu-btn-label {
+            font-size: 0.92rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            font-weight: 700;
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.22);
+        }
+
+        .gd-icon {
+            display: inline-block;
+            position: relative;
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            border: 2px solid rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.35);
+        }
+
+        #normalVersionBtn .gd-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+        }
+
+        .gd-icon-cube::before {
+            content: "";
+            position: absolute;
+            inset: 9px;
+            border-radius: 6px;
+            background: linear-gradient(140deg, #f5ff89, #d5e250);
+            border: 2px solid rgba(27, 68, 32, 0.4);
+        }
+
+        .gd-icon-play::before {
+            content: "";
+            position: absolute;
+            left: 18px;
+            top: 13px;
+            width: 0;
+            height: 0;
+            border-top: 11px solid transparent;
+            border-bottom: 11px solid transparent;
+            border-left: 17px solid #f8ff9b;
+            filter: drop-shadow(1px 1px 0 rgba(14, 68, 30, 0.35));
+        }
+
+        .gd-icon-tools::before,
+        .gd-icon-tools::after {
+            content: "";
+            position: absolute;
+            background: #ffe2b4;
+            border: 2px solid rgba(62, 35, 8, 0.4);
+            border-radius: 3px;
+        }
+
+        .gd-icon-tools::before {
+            width: 20px;
+            height: 7px;
+            left: 9px;
+            top: 15px;
+            transform: rotate(35deg);
+        }
+
+        .gd-icon-tools::after {
+            width: 20px;
+            height: 7px;
+            right: 8px;
+            top: 20px;
+            transform: rotate(-38deg);
+        }
+
+        .gd-menu-orbs {
+            margin-top: 14px;
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+        }
+
+        .gd-orb {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 0, 0, 0.35);
+            box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.35);
+        }
+
+        .gd-orb-gold {
+            background: linear-gradient(160deg, #ffe17e, #ffae31);
+        }
+
+        .gd-orb-green {
+            background: linear-gradient(160deg, #88ffa9, #2fca57);
+        }
+
+        .gd-orb-lime {
+            background: linear-gradient(160deg, #d8ff87, #8ecf2a);
+        }
+
+        .gd-orb-cyan {
+            background: linear-gradient(160deg, #84ebff, #24abc9);
+        }
+
+        .launcher-btn-normal {
+            background: linear-gradient(145deg, #48f0a5, #18b969);
+            color: #123a1f;
+        }
+
+        .launcher-btn-hack {
+            background: linear-gradient(145deg, #f5de73, #e3a52f);
+            color: #4d3200;
+        }
+
+        .launcher-btn-geode {
+            background: linear-gradient(145deg, #f8be6f, #ea7a22);
+            color: #4b2000;
+        }
+
+        .launcher-note {
+            margin-top: 10px;
+            color: #f8f0ff;
+            font-size: 0.82rem;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            opacity: 0.95;
+        }
+
+        .hack-panel {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 30;
+            width: min(290px, calc(100% - 24px));
+            max-height: calc(100% - 24px);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 12px;
+            background: rgba(7, 21, 40, 0.94);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 14px 26px rgba(0, 0, 0, 0.35);
+            padding: 10px;
+            overflow-y: auto;
+        }
+
+        .hack-panel.hidden {
+            display: none;
+        }
+
+        .geode-panel {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            z-index: 29;
+            width: min(300px, calc(100% - 24px));
+            max-height: calc(100% - 24px);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 12px;
+            background: rgba(35, 20, 8, 0.94);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 14px 26px rgba(0, 0, 0, 0.35);
+            padding: 10px;
+            overflow-y: auto;
+        }
+
+        .geode-panel.hidden {
+            display: none;
+        }
+
+        .geode-panel h3 {
+            margin: 0;
+            font-size: 1rem;
+            color: #ffd38a;
+            text-transform: uppercase;
+        }
+
+        .geode-panel p {
+            margin: 4px 0 8px;
+            font-size: 0.8rem;
+            color: #ffe5bf;
+        }
+
+        .hack-panel h3 {
+            margin: 0;
+            font-size: 1rem;
+            color: #9effc8;
+            text-transform: uppercase;
+        }
+
+        .hack-panel p {
+            margin: 4px 0 8px;
+            font-size: 0.8rem;
+            color: #bfdaff;
+        }
+
+        .hack-list {
+            display: grid;
+            gap: 6px;
+        }
+
+        .hack-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: #f0f7ff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 6px 8px;
+            background: rgba(13, 34, 63, 0.7);
+        }
+
+        .hack-item input {
+            width: 18px;
+            height: 18px;
+            accent-color: #00d38a;
+        }
+
+        .hack-item select,
+        .hack-item input[type="range"] {
+            width: 130px;
+            font: inherit;
+        }
+
+        .hack-speed-wrap {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .hack-value {
+            min-width: 34px;
+            text-align: right;
+            color: #9effc8;
+            font-size: 0.84rem;
+        }
+
+        .practice-tab {
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            z-index: 18;
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            pointer-events: none;
+        }
+
+        .practice-tab.hidden {
+            display: none;
+        }
+
+        .practice-key {
+            width: 84px;
+            display: grid;
+            justify-items: center;
+            gap: 4px;
+        }
+
+        .practice-key-box {
+            width: 84px;
+            height: 58px;
+            border-radius: 14px;
+            border: 2px solid rgba(220, 238, 255, 0.65);
+            background: linear-gradient(180deg, #0d3fbc, #082a7b);
+            box-shadow: inset 0 2px 8px rgba(255, 255, 255, 0.2);
+            display: grid;
+            place-items: center;
+            position: relative;
+        }
+
+        .practice-gem {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(145deg, #f7f7f7, #cecece);
+            transform: rotate(45deg);
+            border-radius: 2px;
+            position: relative;
+            box-shadow: 0 0 0 1px rgba(60, 60, 60, 0.28);
+            filter: drop-shadow(0 0 3px rgba(30, 255, 110, 0.45));
+        }
+
+        .practice-gem::after {
+            content: "";
+            position: absolute;
+            inset: 4px;
+            background: linear-gradient(145deg, #4cff48, #0fd129);
+            border-radius: 1px;
+            box-shadow: inset 0 0 0 1px rgba(0, 90, 10, 0.25);
+        }
+
+        .practice-gem::before {
+            content: "";
+            position: absolute;
+            inset: 7px;
+            background: linear-gradient(150deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0));
+            border-radius: 1px;
+        }
+
+        .practice-ban {
+            width: 28px;
+            height: 28px;
+            border: 4px solid #ff5158;
+            border-radius: 50%;
+            position: relative;
+            filter: drop-shadow(0 0 3px rgba(255, 81, 88, 0.45));
+        }
+
+        .practice-ban::after {
+            content: "";
+            position: absolute;
+            width: 30px;
+            height: 4px;
+            background: #ff5158;
+            top: 10px;
+            left: -5px;
+            transform: rotate(-35deg);
+            border-radius: 3px;
+        }
+
+        .practice-key-label {
+            font-size: 1.35rem;
+            font-weight: 700;
+            line-height: 1;
+            color: #ffffff;
+            text-shadow: 0 2px 2px rgba(0, 0, 0, 0.35);
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            background:
+                linear-gradient(to bottom, #1a457f 0%, #11325c 68%, #0c2647 68%, #0c2647 100%);
+        }
+
+        .overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            overflow-y: auto;
+            background:
+                radial-gradient(circle at 18% 18%, rgba(120, 240, 255, 0.16), transparent 42%),
+                radial-gradient(circle at 84% 76%, rgba(255, 188, 78, 0.2), transparent 44%),
+                rgba(8, 20, 40, 0.56);
+            transition: opacity 180ms ease;
+        }
+
+        .overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .panel {
+            width: min(760px, 100%);
+            max-height: calc(100vh - 64px);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background:
+                linear-gradient(150deg, rgba(15, 42, 76, 0.96), rgba(13, 34, 61, 0.92));
+            padding: 16px;
+            overflow-y: auto;
+            box-shadow: 0 20px 36px rgba(0, 0, 0, 0.35);
+        }
+
+        .menu-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .menu-badge {
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            padding: 6px 10px;
+            font-size: 0.8rem;
+            color: #e8f5ff;
+            background: rgba(111, 164, 255, 0.2);
+            white-space: nowrap;
+        }
+
+        .panel h2 {
+            margin: 0;
+            font-size: clamp(1.1rem, 2.8vw, 1.8rem);
+            text-transform: uppercase;
+            color: #ffffff;
+            text-align: left;
+        }
+
+        .panel p {
+            margin: 10px 0 0;
+            color: #d4e6ff;
+            line-height: 1.4;
+            text-align: left;
+        }
+
+        .menu-grid {
+            margin-top: 14px;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(220px, 1fr));
+            gap: 10px;
+        }
+
+        .menu-card {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            background: rgba(6, 18, 36, 0.52);
+            padding: 10px;
+        }
+
+        .menu-card label {
+            display: grid;
+            gap: 6px;
+            font-size: 0.88rem;
+            color: #d4e6ff;
+            text-align: left;
+        }
+
+        .menu-card select {
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 8px 10px;
+            font: inherit;
+            background: rgba(8, 21, 40, 0.76);
+            color: #ffffff;
+        }
+
+        .level-scroll-select {
+            min-height: 210px;
+            max-height: 280px;
+            overflow-y: auto;
+        }
+
+        .menu-card small {
+            color: #9fc8ff;
+            line-height: 1.3;
+        }
+
+        .actions {
+            margin-top: 14px;
+            display: flex;
+            justify-content: flex-start;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .menu-note {
+            margin-top: 8px;
+            font-size: 0.84rem;
+            color: #b6cff8;
+            text-align: left;
+        }
+
+        .builder-actions {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(90px, 1fr));
+            gap: 8px;
+        }
+
+        .builder-block-select {
+            margin-top: 8px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 8px;
+            padding: 7px 8px;
+            font: inherit;
+            background: rgba(12, 27, 49, 0.88);
+            color: #ffffff;
+        }
+
+        .builder-btn {
+            padding: 7px 8px;
+            font-size: 0.8rem;
+            background: linear-gradient(120deg, #93b3ff, #5578d8);
+            color: #ffffff;
+        }
+
+        .builder-info {
+            color: #9fc8ff;
+            line-height: 1.3;
+        }
+
+        .account-grid {
+            display: grid;
+            gap: 8px;
+        }
+
+        .account-grid input {
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 8px;
+            padding: 7px 8px;
+            font: inherit;
+            background: rgba(12, 27, 49, 0.88);
+            color: #ffffff;
+        }
+
+        .account-actions {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(80px, 1fr));
+            gap: 8px;
+        }
+
+        button {
+            border: 0;
+            border-radius: 10px;
+            padding: 10px 14px;
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 140ms ease;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+        }
+
+        .play-btn {
+            background: linear-gradient(120deg, #08f0bc, #00a98a);
+            color: #06251f;
+        }
+
+        .jump-btn {
+            background: linear-gradient(120deg, #67a2ff, #2f62d8);
+            color: #ffffff;
+        }
+
+        .music-btn {
+            background: linear-gradient(120deg, #ffd76f, #f3a043);
+            color: #2f2100;
+            padding: 7px 12px;
+        }
+
+        .icon-btn {
+            background: linear-gradient(120deg, #b8c6ff, #7f95f1);
+            color: #111a3a;
+            padding: 7px 12px;
+        }
+
+        .bottom {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 10px 14px;
+            border-top: 1px solid var(--line);
+            background: rgba(8, 31, 63, 0.25);
+            font-size: 0.95rem;
+        }
+
+        .best {
+            color: #ffe28f;
+            font-weight: 700;
+        }
+
+        @media (max-width: 620px) {
+            .launcher-actions {
+                grid-template-columns: 1fr;
+                grid-template-areas:
+                    "center"
+                    "left"
+                    "right";
+            }
+
+            #normalVersionBtn {
+                min-height: 128px;
+            }
+
+            .launcher-actions button {
+                min-height: 96px;
+            }
+
+            .menu-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .bottom {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="app">
+        <section class="top">
+            <h1 class="title">Geometry Dash Free</h1>
+            <div class="score">
+                <span id="scoreLabel">Score: 0</span>
+                <span id="percentLabel">Progress: 0%</span>
+                <span id="bestPercentLabel">Best %: 0%</span>
+                <span id="levelLabel">Level: 1</span>
+                <span id="difficultyLabel">Difficulty: Easy</span>
+                <span id="practiceLabel">Practice: Off</span>
+                <span id="buildLabel">Build: Balanced</span>
+                <span id="modeLabel">Mode: Cube</span>
+                <span id="iconLabel">Icon: Dart</span>
+                <span id="accountLabel">Account: Guest</span>
+            </div>
+        </section>
+
+        <section class="stage">
+            <canvas id="game" width="900" height="360" aria-label="Geometry Dash Free Game"></canvas>
+
+            <div id="practiceTab" class="practice-tab hidden" aria-label="Practice controls">
+                <div class="practice-key">
+                    <div class="practice-key-box">
+                        <span class="practice-gem" aria-hidden="true"></span>
+                    </div>
+                    <span class="practice-key-label">Z</span>
+                </div>
+                <div class="practice-key">
+                    <div class="practice-key-box">
+                        <span class="practice-ban" aria-hidden="true"></span>
+                    </div>
+                    <span class="practice-key-label">X</span>
+                </div>
+            </div>
+
+            <div id="launcher" class="launcher">
+                <div class="launcher-card">
+                    <div class="gd-logo-wrap">
+                        <h2 class="gd-logo">Geometry Dash</h2>
+                        <p class="gd-subtitle">Free Menu</p>
+                    </div>
+                    <div class="launcher-actions">
+                        <button id="normalVersionBtn" class="launcher-btn-normal" type="button">
+                            <span class="gd-icon gd-icon-play" aria-hidden="true"></span>
+                            <span class="gd-menu-btn-label">Normal</span>
+                        </button>
+                        <button id="hackVersionBtn" class="launcher-btn-hack" type="button">
+                            <span class="gd-icon gd-icon-cube" aria-hidden="true"></span>
+                            <span class="gd-menu-btn-label">Hack</span>
+                        </button>
+                        <button id="geodeVersionBtn" class="launcher-btn-geode" type="button">
+                            <span class="gd-icon gd-icon-tools" aria-hidden="true"></span>
+                            <span class="gd-menu-btn-label">Geode</span>
+                        </button>
+                    </div>
+                    <div class="gd-menu-orbs" aria-hidden="true">
+                        <span class="gd-orb gd-orb-gold"></span>
+                        <span class="gd-orb gd-orb-green"></span>
+                        <span class="gd-orb gd-orb-lime"></span>
+                        <span class="gd-orb gd-orb-cyan"></span>
+                    </div>
+                    <div id="launcherNote" class="launcher-note">Hack version: no deaths from spikes + all levels selectable.</div>
+                </div>
+            </div>
+
+            <aside id="hackPanel" class="hack-panel hidden" aria-label="Hack Panel">
+                <h3>Hack Menu</h3>
+                <p>Press TAB to hide/show</p>
+                <div class="hack-list">
+                    <label class="hack-item">
+                        Speed Changer
+                        <span class="hack-speed-wrap">
+                            <input id="hackSpeedValue" type="range" min="0.5" max="3" step="0.1" value="1">
+                            <span id="hackSpeedLabel" class="hack-value">1.0x</span>
+                        </span>
+                    </label>
+                    <label class="hack-item">
+                        No Limit Speed
+                        <input id="hackNoLimitSpeed" type="checkbox">
+                    </label>
+                    <label class="hack-item">
+                        No Limit Multiplier
+                        <input id="hackNoLimitSpeedValue" type="number" min="0.1" step="0.1" value="5">
+                    </label>
+                    <label class="hack-item">
+                        No Clip
+                        <input id="hackNoclip" type="checkbox">
+                    </label>
+                    <label class="hack-item">
+                        Unlock All Levels
+                        <input id="hackUnlock" type="checkbox">
+                    </label>
+                    <label class="hack-item">
+                        Show Hitboxes
+                        <input id="hackHitboxes" type="checkbox">
+                    </label>
+                    <label class="hack-item">
+                        Auto Complete
+                        <input id="hackAutoComplete" type="checkbox">
+                    </label>
+                    <label class="hack-item">
+                        Jump Hack (Become UFO)
+                        <input id="hackJumpUfo" type="checkbox">
+                    </label>
+                    <label class="hack-item">
+                        Gamemode Changer
+                        <select id="hackModeSelect" aria-label="Hack gamemode changer">
+                            <option value="off">Off</option>
+                            <option value="cube">Cube</option>
+                            <option value="ship">Ship</option>
+                            <option value="ball">Ball</option>
+                            <option value="ufo">UFO</option>
+                            <option value="wave">Wave</option>
+                            <option value="robot">Robot</option>
+                            <option value="spider">Spider</option>
+                            <option value="swing">Swing</option>
+                        </select>
+                    </label>
+                </div>
+            </aside>
+
+            <aside id="geodePanel" class="geode-panel hidden" aria-label="Geode Mods Panel">
+                <h3>Geode Mods</h3>
+                <p>Press G to hide/show</p>
+                <div class="hack-list">
+                    <label class="hack-item">
+                        Speed Boost
+                        <input id="geodeSpeedBoost" type="checkbox">
+                    </label>
+                    <label class="hack-item">
+                        Low Gravity
+                        <input id="geodeLowGravity" type="checkbox">
+                    </label>
+                    <label class="hack-item">
+                        Show Hitboxes
+                        <input id="geodeHitboxes" type="checkbox">
+                    </label>
+                    <label class="hack-item">
+                        Rainbow Icon
+                        <input id="geodeRainbow" type="checkbox">
+                    </label>
+                    <label class="hack-item">
+                        Auto Retry
+                        <input id="geodeAutoRetry" type="checkbox">
+                    </label>
+                    <label class="hack-item">
+                        Click Frames+
+                        <input id="geodeClickFrames" type="checkbox">
+                    </label>
+                    <label class="hack-item">
+                        Globed Demo
+                        <input id="geodeGlobed" type="checkbox">
+                    </label>
+                </div>
+            </aside>
+
+            <div id="overlay" class="overlay">
+                <div class="panel">
+                    <div class="menu-header">
+                        <h2 id="overlayTitle">Main Menu</h2>
+                        <span class="menu-badge">Geometry Dash Free</span>
+                    </div>
+                    <p id="overlayText">Choose your setup, then launch the run.</p>
+                    <div class="menu-grid">
+                        <div class="menu-card">
+                            <label>
+                                Level
+                                <select id="levelSelect" class="level-scroll-select" size="8" aria-label="Choose level"></select>
+                                <small id="levelInfo">-</small>
+                            </label>
+                        </div>
+                        <div class="menu-card">
+                            <label>
+                                Player Build
+                                <select id="buildSelect" aria-label="Choose player build"></select>
+                                <small id="buildInfo">-</small>
+                            </label>
+                        </div>
+                        <div class="menu-card">
+                            <label>
+                                Gamemode
+                                <select id="modeSelect" aria-label="Choose gamemode"></select>
+                                <small id="modeInfo">-</small>
+                            </label>
+                        </div>
+                        <div class="menu-card">
+                            <label>
+                                Icon
+                                <select id="iconSelect" aria-label="Choose icon"></select>
+                                <small id="iconInfo">-</small>
+                            </label>
+                        </div>
+                        <div class="menu-card">
+                            <label>
+                                Song
+                                <select id="songSelect" aria-label="Choose song"></select>
+                                <small id="songInfo">-</small>
+                            </label>
+                        </div>
+                        <div class="menu-card">
+                            <label>
+                                Practice Mode
+                                <select id="practiceSelect" aria-label="Choose practice mode">
+                                    <option value="off">Off</option>
+                                    <option value="on">On</option>
+                                </select>
+                                <small id="practiceInfo">In practice mode, death respawns at checkpoint.</small>
+                            </label>
+                        </div>
+                        <div class="menu-card">
+                            <label>
+                                2.2 Features
+                                <select id="featureSetSelect" aria-label="Choose 2.2 feature set">
+                                    <option value="classic">Classic</option>
+                                    <option value="twoTwo">2.2 Mode</option>
+                                </select>
+                                <small id="featureSetInfo">Classic mode: old-school behavior.</small>
+                            </label>
+                        </div>
+                        <div class="menu-card">
+                            <label>
+                                Level Builder
+                                <div class="builder-actions">
+                                    <button id="builderToggleBtn" class="builder-btn" type="button">Open Builder</button>
+                                    <button id="builderToolBtn" class="builder-btn" type="button">Tool: Spike</button>
+                                    <button id="builderSaveBtn" class="builder-btn" type="button">Save</button>
+                                    <button id="builderLeftBtn" class="builder-btn" type="button">Pan Left</button>
+                                    <button id="builderRightBtn" class="builder-btn" type="button">Pan Right</button>
+                                    <button id="builderClearBtn" class="builder-btn" type="button">Clear</button>
+                                    <button id="builderPlayBtn" class="builder-btn" type="button">Play Custom</button>
+                                </div>
+                                <select id="builderBlockStyleSelect" class="builder-block-select" aria-label="Choose block style">
+                                    <option value="classic">Block Style: Classic</option>
+                                    <option value="stone">Block Style: Stone</option>
+                                    <option value="neon">Block Style: Neon</option>
+                                    <option value="glow">Block Style: Glow</option>
+                                    <option value="brick">Block Style: Brick</option>
+                                    <option value="metal">Block Style: Metal</option>
+                                    <option value="checker">Block Style: Checker</option>
+                                    <option value="crystal">Block Style: Crystal</option>
+                                    <option value="tech">Block Style: Tech</option>
+                                    <option value="wood">Block Style: Wood</option>
+                                    <option value="lava">Block Style: Lava</option>
+                                    <option value="ice">Block Style: Ice</option>
+                                </select>
+                                <small id="builderInfo" class="builder-info">Build a custom level: place spikes/blocks, or erase with the tool.</small>
+                            </label>
+                        </div>
+                        <div class="menu-card">
+                            <label>
+                                Account Creator
+                                <div class="account-grid">
+                                    <input id="accountNameInput" type="text" maxlength="20" placeholder="Username">
+                                    <input id="accountPassInput" type="password" maxlength="40" placeholder="Password">
+                                    <div class="account-actions">
+                                        <button id="createAccountBtn" class="builder-btn" type="button">Create</button>
+                                        <button id="loginAccountBtn" class="builder-btn" type="button">Login</button>
+                                        <button id="logoutAccountBtn" class="builder-btn" type="button">Logout</button>
+                                    </div>
+                                </div>
+                                <small id="accountInfo" class="builder-info">Create or login to an account saved on this browser.</small>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <button id="playBtn" class="play-btn" type="button">Start Game</button>
+                        <button id="jumpBtn" class="jump-btn" type="button">Jump (W/Space)</button>
+                    </div>
+                    <div class="menu-note">Tip: W, Space, Arrow Up, or tap also starts instantly.</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bottom">
+            <span>Controls: W / Space / ArrowUp / Click / Tap</span>
+            <span id="musicLabel">Song: -</span>
+            <button id="nextIconBtn" class="icon-btn" type="button">Icon Setting: Next</button>
+            <button id="muteBtn" class="music-btn" type="button">Mute: Off</button>
+            <span id="bestLabel" class="best">Best: 0</span>
+        </section>
+    </main>
+
+    <script>
+        const canvas = document.getElementById("game");
+        const ctx = canvas.getContext("2d");
+
+        const scoreLabel = document.getElementById("scoreLabel");
+        const percentLabel = document.getElementById("percentLabel");
+        const bestPercentLabel = document.getElementById("bestPercentLabel");
+        const levelLabel = document.getElementById("levelLabel");
+        const difficultyLabel = document.getElementById("difficultyLabel");
+        const practiceLabel = document.getElementById("practiceLabel");
+        const buildLabel = document.getElementById("buildLabel");
+        const modeLabel = document.getElementById("modeLabel");
+        const iconLabel = document.getElementById("iconLabel");
+        const accountLabel = document.getElementById("accountLabel");
+        const bestLabel = document.getElementById("bestLabel");
+        const musicLabel = document.getElementById("musicLabel");
+        const nextIconBtn = document.getElementById("nextIconBtn");
+        const muteBtn = document.getElementById("muteBtn");
+        const launcher = document.getElementById("launcher");
+        const normalVersionBtn = document.getElementById("normalVersionBtn");
+        const hackVersionBtn = document.getElementById("hackVersionBtn");
+        const geodeVersionBtn = document.getElementById("geodeVersionBtn");
+        const launcherNote = document.getElementById("launcherNote");
+        const hackPanel = document.getElementById("hackPanel");
+        const geodePanel = document.getElementById("geodePanel");
+        const practiceTab = document.getElementById("practiceTab");
+        const hackSpeedValue = document.getElementById("hackSpeedValue");
+        const hackSpeedLabel = document.getElementById("hackSpeedLabel");
+        const hackNoLimitSpeed = document.getElementById("hackNoLimitSpeed");
+        const hackNoLimitSpeedValue = document.getElementById("hackNoLimitSpeedValue");
+        const hackNoclip = document.getElementById("hackNoclip");
+        const hackUnlock = document.getElementById("hackUnlock");
+        const hackHitboxes = document.getElementById("hackHitboxes");
+        const hackAutoComplete = document.getElementById("hackAutoComplete");
+        const hackJumpUfo = document.getElementById("hackJumpUfo");
+        const hackModeSelect = document.getElementById("hackModeSelect");
+        const geodeSpeedBoost = document.getElementById("geodeSpeedBoost");
+        const geodeLowGravity = document.getElementById("geodeLowGravity");
+        const geodeHitboxes = document.getElementById("geodeHitboxes");
+        const geodeRainbow = document.getElementById("geodeRainbow");
+        const geodeAutoRetry = document.getElementById("geodeAutoRetry");
+        const geodeClickFrames = document.getElementById("geodeClickFrames");
+        const geodeGlobed = document.getElementById("geodeGlobed");
+        const overlay = document.getElementById("overlay");
+        const overlayTitle = document.getElementById("overlayTitle");
+        const overlayText = document.getElementById("overlayText");
+        const levelSelect = document.getElementById("levelSelect");
+        const buildSelect = document.getElementById("buildSelect");
+        const modeSelect = document.getElementById("modeSelect");
+        const iconSelect = document.getElementById("iconSelect");
+        const songSelect = document.getElementById("songSelect");
+        const practiceSelect = document.getElementById("practiceSelect");
+        const featureSetSelect = document.getElementById("featureSetSelect");
+        const builderToggleBtn = document.getElementById("builderToggleBtn");
+        const builderToolBtn = document.getElementById("builderToolBtn");
+        const builderSaveBtn = document.getElementById("builderSaveBtn");
+        const builderLeftBtn = document.getElementById("builderLeftBtn");
+        const builderRightBtn = document.getElementById("builderRightBtn");
+        const builderClearBtn = document.getElementById("builderClearBtn");
+        const builderPlayBtn = document.getElementById("builderPlayBtn");
+        const builderBlockStyleSelect = document.getElementById("builderBlockStyleSelect");
+        const accountNameInput = document.getElementById("accountNameInput");
+        const accountPassInput = document.getElementById("accountPassInput");
+        const createAccountBtn = document.getElementById("createAccountBtn");
+        const loginAccountBtn = document.getElementById("loginAccountBtn");
+        const logoutAccountBtn = document.getElementById("logoutAccountBtn");
+        const levelInfo = document.getElementById("levelInfo");
+        const buildInfo = document.getElementById("buildInfo");
+        const modeInfo = document.getElementById("modeInfo");
+        const iconInfo = document.getElementById("iconInfo");
+        const songInfo = document.getElementById("songInfo");
+        const practiceInfo = document.getElementById("practiceInfo");
+        const featureSetInfo = document.getElementById("featureSetInfo");
+        const builderInfo = document.getElementById("builderInfo");
+        const accountInfo = document.getElementById("accountInfo");
+        const playBtn = document.getElementById("playBtn");
+        const jumpBtn = document.getElementById("jumpBtn");
+
+        const BEST_KEY = "geometry-dash-free-best";
+        const BEST_PERCENT_KEY = "geometry-dash-free-best-percent";
+        const UNLOCKED_LEVEL_KEY = "geometry-dash-free-unlocked-level";
+        const ICON_KEY = "geometry-dash-free-icon";
+        const SONG_CHOICE_KEY = "geometry-dash-free-song-choice";
+        const CUSTOM_LEVEL_KEY = "geometry-dash-free-custom-level";
+        const ACCOUNT_DB_KEY = "geometry-dash-free-accounts";
+        const CURRENT_ACCOUNT_KEY = "geometry-dash-free-current-account";
+        const CLEAR_ONCE_KEY = "geometry-dash-free-cleared-once";
+        const CUSTOM_LEVEL_ID = 501;
+
+        const BLOCK_STYLES = [
+            "classic",
+            "stone",
+            "neon",
+            "glow",
+            "brick",
+            "metal",
+            "checker",
+            "crystal",
+            "tech",
+            "wood",
+            "lava",
+            "ice"
+        ];
+
+        const groundY = 290;
+        const ceilingY = 8;
+
+        const levels = [
+            {
+                id: 1,
+                name: "Neon Start",
+                target: 150,
+                length: "XL",
+                difficulty: "Easy",
+                baseSpeed: 5.8,
+                gravity: 0.8,
+                minGap: 70,
+                maxGap: 125,
+                obstacleHeight: [34, 62],
+                obstacleWidth: [28, 44],
+                doubleChance: 0.08,
+                spawnMode: "standard",
+                songId: "neon",
+                palette: { sky: "#1a457f", mid: "#11325c", floor: "#0c2647", line: "#26c9ff" }
+            },
+            {
+                id: 2,
+                name: "Jump Two",
+                target: 190,
+                length: "XL",
+                difficulty: "Normal",
+                baseSpeed: 6.2,
+                gravity: 0.84,
+                minGap: 62,
+                maxGap: 102,
+                obstacleHeight: [30, 68],
+                obstacleWidth: [24, 36],
+                doubleChance: 0,
+                spawnMode: "jump-two",
+                songId: "jumpTwo",
+                palette: { sky: "#294783", mid: "#1d2f63", floor: "#101a43", line: "#8eff7e" }
+            },
+            {
+                id: 3,
+                name: "Dash Run",
+                target: 230,
+                length: "XL",
+                difficulty: "Hard",
+                baseSpeed: 7,
+                gravity: 0.9,
+                minGap: 68,
+                maxGap: 108,
+                obstacleHeight: [28, 62],
+                obstacleWidth: [20, 32],
+                doubleChance: 0,
+                spawnMode: "dash-train",
+                songId: "dashRun",
+                palette: { sky: "#2b356b", mid: "#1e244f", floor: "#121633", line: "#ffd764" }
+            },
+            {
+                id: 4,
+                name: "Circuit Rush",
+                target: 280,
+                length: "XL",
+                difficulty: "Harder",
+                baseSpeed: 7.4,
+                gravity: 0.9,
+                minGap: 52,
+                maxGap: 98,
+                obstacleHeight: [38, 84],
+                obstacleWidth: [26, 40],
+                doubleChance: 0.2,
+                spawnMode: "standard",
+                songId: "circuit",
+                palette: { sky: "#30446f", mid: "#173252", floor: "#0e2038", line: "#f4ce57" }
+            },
+            {
+                id: 5,
+                name: "Pulse Bridge",
+                target: 330,
+                length: "XL",
+                difficulty: "Insane",
+                baseSpeed: 7.9,
+                gravity: 0.92,
+                minGap: 46,
+                maxGap: 88,
+                obstacleHeight: [42, 94],
+                obstacleWidth: [24, 38],
+                doubleChance: 0.27,
+                spawnMode: "standard",
+                songId: "pulse",
+                palette: { sky: "#532c7a", mid: "#2b1d51", floor: "#1a1236", line: "#ff9f68" }
+            },
+            {
+                id: 6,
+                name: "Chaos Avenue",
+                target: 380,
+                length: "XL",
+                difficulty: "Insane",
+                baseSpeed: 8.3,
+                gravity: 0.95,
+                minGap: 44,
+                maxGap: 84,
+                obstacleHeight: [44, 100],
+                obstacleWidth: [22, 36],
+                doubleChance: 0.32,
+                spawnMode: "standard",
+                songId: "chaos",
+                palette: { sky: "#73345f", mid: "#492445", floor: "#27152b", line: "#ff8b70" }
+            },
+            {
+                id: 7,
+                name: "Final Pixel",
+                target: 440,
+                length: "XL",
+                difficulty: "Easy Demon",
+                baseSpeed: 8.6,
+                gravity: 0.96,
+                minGap: 42,
+                maxGap: 80,
+                obstacleHeight: [46, 105],
+                obstacleWidth: [22, 36],
+                doubleChance: 0.34,
+                spawnMode: "standard",
+                songId: "final",
+                palette: { sky: "#692f5f", mid: "#3f2047", floor: "#25142e", line: "#ffcc59" }
+            },
+            {
+                id: 8,
+                name: "Sky Fracture",
+                target: 520,
+                length: "XL",
+                difficulty: "Medium Demon",
+                baseSpeed: 9.1,
+                gravity: 1,
+                minGap: 38,
+                maxGap: 72,
+                obstacleHeight: [50, 116],
+                obstacleWidth: [20, 34],
+                doubleChance: 0.4,
+                spawnMode: "dash-train",
+                songId: "fracture",
+                palette: { sky: "#3f2d68", mid: "#22193f", floor: "#151027", line: "#59f2ff" }
+            },
+            {
+                id: 9,
+                name: "Voltage Rift",
+                target: 600,
+                length: "XL",
+                difficulty: "Hard Demon",
+                baseSpeed: 9.5,
+                gravity: 1.03,
+                minGap: 36,
+                maxGap: 68,
+                obstacleHeight: [54, 122],
+                obstacleWidth: [19, 33],
+                doubleChance: 0.44,
+                spawnMode: "standard",
+                songId: "chaos",
+                palette: { sky: "#3b2959", mid: "#25193f", floor: "#150f29", line: "#ff7dd5" }
+            },
+            {
+                id: 10,
+                name: "Core Overdrive",
+                target: 690,
+                length: "XL",
+                difficulty: "Hard Demon",
+                baseSpeed: 9.9,
+                gravity: 1.06,
+                minGap: 34,
+                maxGap: 64,
+                obstacleHeight: [56, 126],
+                obstacleWidth: [18, 32],
+                doubleChance: 0.48,
+                spawnMode: "jump-two",
+                songId: "final",
+                palette: { sky: "#4c2b47", mid: "#2d1830", floor: "#1b0f1d", line: "#ffb365" }
+            },
+            {
+                id: 11,
+                name: "Prism Collapse",
+                target: 790,
+                length: "XL",
+                difficulty: "Insane Demon",
+                baseSpeed: 10.3,
+                gravity: 1.08,
+                minGap: 32,
+                maxGap: 60,
+                obstacleHeight: [58, 130],
+                obstacleWidth: [18, 30],
+                doubleChance: 0.52,
+                spawnMode: "dash-train",
+                songId: "fracture",
+                palette: { sky: "#23346a", mid: "#162247", floor: "#0f1731", line: "#74f2ff" }
+            },
+            {
+                id: 12,
+                name: "Apex Singularity",
+                target: 900,
+                length: "XL",
+                difficulty: "Extreme Demon",
+                baseSpeed: 10.8,
+                gravity: 1.1,
+                minGap: 30,
+                maxGap: 56,
+                obstacleHeight: [60, 138],
+                obstacleWidth: [16, 30],
+                doubleChance: 0.58,
+                spawnMode: "standard",
+                songId: "final",
+                palette: { sky: "#2f244d", mid: "#1a1530", floor: "#100d1f", line: "#ffdf5f" }
+            },
+            {
+                id: 13,
+                name: "Laser Corridor",
+                target: 1020,
+                length: "XL",
+                difficulty: "Extreme Demon",
+                baseSpeed: 11.1,
+                gravity: 1.12,
+                minGap: 28,
+                maxGap: 53,
+                obstacleHeight: [62, 142],
+                obstacleWidth: [16, 28],
+                doubleChance: 0.62,
+                spawnMode: "jump-two",
+                songId: "chaos",
+                palette: { sky: "#34224e", mid: "#201632", floor: "#130e22", line: "#ff7d96" }
+            },
+            {
+                id: 14,
+                name: "Storm Matrix",
+                target: 1150,
+                length: "XL",
+                difficulty: "Extreme Demon",
+                baseSpeed: 11.4,
+                gravity: 1.14,
+                minGap: 27,
+                maxGap: 50,
+                obstacleHeight: [64, 146],
+                obstacleWidth: [15, 28],
+                doubleChance: 0.64,
+                spawnMode: "dash-train",
+                songId: "fracture",
+                palette: { sky: "#253462", mid: "#17213f", floor: "#10162d", line: "#67f8ff" }
+            },
+            {
+                id: 15,
+                name: "Iron Skyline",
+                target: 1290,
+                length: "XL",
+                difficulty: "Extreme Demon",
+                baseSpeed: 11.8,
+                gravity: 1.16,
+                minGap: 26,
+                maxGap: 48,
+                obstacleHeight: [66, 150],
+                obstacleWidth: [14, 27],
+                doubleChance: 0.66,
+                spawnMode: "standard",
+                songId: "final",
+                palette: { sky: "#41334f", mid: "#291e34", floor: "#17111f", line: "#ffc56b" }
+            },
+            {
+                id: 16,
+                name: "Static Inferno",
+                target: 1440,
+                length: "XL",
+                difficulty: "Extreme Demon",
+                baseSpeed: 12.1,
+                gravity: 1.18,
+                minGap: 25,
+                maxGap: 46,
+                obstacleHeight: [68, 154],
+                obstacleWidth: [14, 26],
+                doubleChance: 0.68,
+                spawnMode: "jump-two",
+                songId: "chaos",
+                palette: { sky: "#4c2e40", mid: "#2e1a28", floor: "#1a1017", line: "#ff8c64" }
+            },
+            {
+                id: 17,
+                name: "Quantum Spine",
+                target: 1600,
+                length: "XL",
+                difficulty: "Extreme Demon",
+                baseSpeed: 12.5,
+                gravity: 1.2,
+                minGap: 24,
+                maxGap: 44,
+                obstacleHeight: [70, 160],
+                obstacleWidth: [14, 25],
+                doubleChance: 0.7,
+                spawnMode: "dash-train",
+                songId: "fracture",
+                palette: { sky: "#2a2f64", mid: "#1a1e42", floor: "#11152f", line: "#83f3ff" }
+            },
+            {
+                id: 18,
+                name: "Void Assembly",
+                target: 1770,
+                length: "XL",
+                difficulty: "Extreme Demon",
+                baseSpeed: 12.9,
+                gravity: 1.22,
+                minGap: 23,
+                maxGap: 42,
+                obstacleHeight: [72, 164],
+                obstacleWidth: [13, 24],
+                doubleChance: 0.72,
+                spawnMode: "standard",
+                songId: "final",
+                palette: { sky: "#2d2242", mid: "#1c152e", floor: "#120d1d", line: "#ffd769" }
+            },
+            {
+                id: 19,
+                name: "Neutron Rift",
+                target: 1950,
+                length: "XL",
+                difficulty: "Extreme Demon",
+                baseSpeed: 13.2,
+                gravity: 1.24,
+                minGap: 22,
+                maxGap: 40,
+                obstacleHeight: [74, 168],
+                obstacleWidth: [13, 24],
+                doubleChance: 0.74,
+                spawnMode: "jump-two",
+                songId: "chaos",
+                palette: { sky: "#3a2a4d", mid: "#241a34", floor: "#161023", line: "#ff9fe3" }
+            },
+            {
+                id: 20,
+                name: "Omega Protocol",
+                target: 2140,
+                length: "XL",
+                difficulty: "Extreme Demon+",
+                baseSpeed: 13.6,
+                gravity: 1.26,
+                minGap: 21,
+                maxGap: 38,
+                obstacleHeight: [76, 174],
+                obstacleWidth: [12, 24],
+                doubleChance: 0.76,
+                spawnMode: "dash-train",
+                songId: "fracture",
+                palette: { sky: "#221b39", mid: "#161128", floor: "#0d0a18", line: "#7ff8ff" }
+            }
+        ];
+
+        // Expand campaign to 500 total levels with procedural scaling.
+        const generatedSongs = ["neon", "jumpTwo", "dashRun", "circuit", "pulse", "chaos", "final", "fracture"];
+        const generatedSpawns = ["standard", "jump-two", "dash-train"];
+        const generatedDifficulties = [
+            "Extreme Demon+",
+            "Mythic",
+            "Mythic+",
+            "Legendary",
+            "Insane+",
+            "Impossible"
+        ];
+
+        for (let id = 21; id <= 500; id += 1) {
+            const tier = id - 20;
+            const speed = Math.min(34, 13.6 + tier * 0.042);
+            const gravity = Math.min(2.2, 1.26 + tier * 0.0022);
+            const minGap = Math.max(10, Math.round(21 - tier * 0.03));
+            const maxGap = Math.max(minGap + 8, Math.round(38 - tier * 0.03));
+            const widthMin = Math.max(8, Math.round(12 - tier * 0.01));
+            const widthMax = Math.max(widthMin + 8, Math.round(24 - tier * 0.005));
+            const heightMin = Math.min(120, Math.round(76 + tier * 0.06));
+            const heightMax = Math.min(240, Math.round(174 + tier * 0.16));
+            const target = Math.round(2140 + tier * 210);
+            const difficulty = generatedDifficulties[Math.min(generatedDifficulties.length - 1, Math.floor(tier / 80))];
+            const hue = (200 + tier * 7) % 360;
+            const hue2 = (hue + 26) % 360;
+            const hue3 = (hue + 54) % 360;
+
+            levels.push({
+                id,
+                name: `Ultra Stage ${id}`,
+                target,
+                length: "XL",
+                difficulty,
+                baseSpeed: Number(speed.toFixed(2)),
+                gravity: Number(gravity.toFixed(3)),
+                minGap,
+                maxGap,
+                obstacleHeight: [heightMin, heightMax],
+                obstacleWidth: [widthMin, widthMax],
+                doubleChance: Math.min(0.95, 0.76 + tier * 0.00045),
+                spawnMode: generatedSpawns[tier % generatedSpawns.length],
+                songId: generatedSongs[tier % generatedSongs.length],
+                palette: {
+                    sky: `hsl(${hue} 40% 28%)`,
+                    mid: `hsl(${hue2} 45% 20%)`,
+                    floor: `hsl(${hue3} 50% 12%)`,
+                    line: `hsl(${(hue + 140) % 360} 90% 66%)`
+                }
+            });
+        }
+
+        const builds = [
+            {
+                id: "balanced",
+                name: "Balanced",
+                description: "Safe all-round build.",
+                jumpForce: -14,
+                gravityScale: 1,
+                speedScale: 1,
+                size: 42,
+                color: "#00ffd0"
+            },
+            {
+                id: "agile",
+                name: "Agile",
+                description: "Higher jump, slightly faster, smaller hitbox.",
+                jumpForce: -15.8,
+                gravityScale: 0.92,
+                speedScale: 1.08,
+                size: 38,
+                color: "#5ff4ff"
+            },
+            {
+                id: "tank",
+                name: "Tank",
+                description: "Bigger cube, heavy gravity, lower speed.",
+                jumpForce: -13,
+                gravityScale: 1.12,
+                speedScale: 0.9,
+                size: 46,
+                color: "#ffd447"
+            }
+        ];
+
+        const modes = [
+            { id: "cube", name: "Cube", description: "Classic jump mode." },
+            { id: "ship", name: "Ship", description: "Hold to fly up, release to fall." },
+            { id: "ball", name: "Ball", description: "Tap to flip gravity." },
+            { id: "ufo", name: "UFO", description: "Each tap does a flap jump." },
+            { id: "wave", name: "Wave", description: "Hold up, release down in diagonal motion." },
+            { id: "robot", name: "Robot", description: "Hold and release for stronger jumps." },
+            { id: "spider", name: "Spider", description: "Tap to teleport between floor and ceiling." },
+            { id: "swing", name: "Swing", description: "Tap to switch gravity direction mid-air." }
+        ];
+
+        const icons = [
+            { id: "dart", name: "Dart", description: "Sharp base icon.", primary: "#d4d7dc", accent: "#ffffff", detail: "chevron" },
+            { id: "volt", name: "Volt", description: "Split crystal look.", primary: "#b8c6ff", accent: "#f3f7ff", detail: "split" },
+            { id: "core", name: "Core Eye", description: "Centered core symbol.", primary: "#d9d9db", accent: "#fefefe", detail: "core" },
+            { id: "fang", name: "Fang", description: "Aggressive fanged crest.", primary: "#bec0cb", accent: "#f2f5f8", detail: "fang" },
+            { id: "glyph", name: "Glyph", description: "Rune-like inner mark.", primary: "#d2d4de", accent: "#f9fbff", detail: "glyph" },
+            { id: "orbit", name: "Orbit", description: "Ring and core style.", primary: "#c5d0d8", accent: "#ffffff", detail: "ring" },
+            { id: "spire", name: "Spire", description: "Tall center shard.", primary: "#bfc7d1", accent: "#f4f9ff", detail: "spire" },
+            { id: "nova", name: "Nova", description: "Tri-star motif.", primary: "#c8cfda", accent: "#ffffff", detail: "star" }
+        ];
+
+        const songs = {
+            neon: {
+                name: "Pulse Grid",
+                tempo: 146,
+                melody: [76, 79, 81, 83, 81, 79, 76, null],
+                bass: [52, null, 52, null, 55, null, 50, null]
+            },
+            jumpTwo: {
+                name: "Jump Twin",
+                tempo: 152,
+                melody: [79, 79, 83, 79, 84, 83, 79, null],
+                bass: [48, null, 50, null, 52, null, 50, null]
+            },
+            dashRun: {
+                name: "Dash Reactor",
+                tempo: 166,
+                melody: [83, 86, 88, 86, 83, 81, 79, 81],
+                bass: [52, 52, null, 52, 50, 50, null, 50]
+            },
+            circuit: {
+                name: "Wire Rush",
+                tempo: 158,
+                melody: [81, 84, 86, 84, 81, 79, 77, 79],
+                bass: [50, null, 53, null, 48, null, 50, null]
+            },
+            pulse: {
+                name: "Bridge Echo",
+                tempo: 162,
+                melody: [84, 86, 88, 86, 89, 88, 86, 84],
+                bass: [53, null, 53, null, 55, null, 52, null]
+            },
+            chaos: {
+                name: "Break Core",
+                tempo: 170,
+                melody: [86, 89, 91, 89, 86, 84, 82, 84],
+                bass: [52, 55, null, 50, 52, 55, null, 48]
+            },
+            final: {
+                name: "Last Portal",
+                tempo: 176,
+                melody: [88, 91, 93, 95, 93, 91, 88, 86],
+                bass: [55, null, 53, null, 57, null, 52, null]
+            },
+            fracture: {
+                name: "Sky Breaker",
+                tempo: 182,
+                melody: [91, 95, 98, 95, 93, 91, 88, 93],
+                bass: [57, null, 53, null, 60, null, 55, null]
+            }
+        };
+
+        // Optional local tracks. If a file is missing, the game falls back to synth songs.
+        const customLevelTracks = {
+            1: { name: "Sonic Blaster", file: "assets/music/sonic-blaster.mp3" },
+            2: { name: "Time Machine", file: "assets/music/time-machine.mp3" },
+            3: { name: "NK - Problematic", file: "assets/music/nk-problematic.mp3" }
+        };
+
+        const songChoices = [
+            { id: "auto", name: "Auto (by level)", type: "auto", description: "Uses level song mapping." },
+            { id: "sonic", name: "Sonic Blaster", type: "file", file: "assets/music/sonic-blaster.mp3", description: "Local file song." },
+            { id: "time", name: "Time Machine", type: "file", file: "assets/music/time-machine.mp3", description: "Local file song." },
+            { id: "problematic", name: "NK - Problematic", type: "file", file: "assets/music/nk-problematic.mp3", description: "Local file song." },
+            { id: "pulseGrid", name: "Pulse Grid", type: "synth", songId: "neon", description: "Built-in synth fallback." },
+            { id: "wireRush", name: "Wire Rush", type: "synth", songId: "circuit", description: "Built-in synth fallback." }
+        ];
+
+        let player;
+        let obstacles;
+        let particles;
+        let score;
+        let best;
+        let speed;
+        let nextObstacleTimer;
+        let gameOver;
+        let running;
+        let unlockedLevel;
+        let selectedLevel;
+        let selectedBuild;
+        let selectedMode;
+        let selectedIcon;
+        let selectedSongChoice;
+        let selectedPracticeMode;
+        let selectedFeatureSet;
+        let activeLevel;
+        let activeBuild;
+        let activeMode;
+        let activeIcon;
+        let activePracticeMode;
+        let activeTwoTwo;
+        let audioCtx;
+        let songTimer;
+        let songStep;
+        let currentSongId;
+        let currentAudio;
+        let muted;
+        let inputHeld;
+        let justPressed;
+        let pressStartedAt;
+        let keyHeld;
+        let pointerHeld;
+        let lastWaveTapAt;
+        let waveStraightUntil;
+        let waveTrail;
+        let launcherMode;
+        let hackPanelOpen;
+        let geodePanelOpen;
+        let hacks;
+        let geodeMods;
+        let bestPercentByLevel;
+        let checkpointState;
+        let lastAutoCheckpointScore;
+        let dashOrbs;
+        let cameraPulse;
+        let customLevelObstacles;
+        let builderMode;
+        let builderTool;
+        let builderCameraX;
+        let builderBlockStyle;
+        let accountsDb;
+        let currentAccountName;
+        let geodeClickBufferFrames;
+        let ghostHistory;
+
+        function loadBest() {
+            const raw = localStorage.getItem(BEST_KEY);
+            const num = Number(raw);
+            return Number.isFinite(num) ? num : 0;
+        }
+
+        function loadUnlockedLevel() {
+            const raw = localStorage.getItem(UNLOCKED_LEVEL_KEY);
+            const num = Number(raw);
+            if (!Number.isFinite(num)) {
+                return 1;
+            }
+            return Math.min(levels.length, Math.max(1, Math.floor(num)));
+        }
+
+        function loadBestPercentByLevel() {
+            const raw = localStorage.getItem(BEST_PERCENT_KEY);
+            if (!raw) {
+                return {};
+            }
+
+            try {
+                const parsed = JSON.parse(raw);
+                if (!parsed || typeof parsed !== "object") {
+                    return {};
+                }
+                return parsed;
+            } catch {
+                return {};
+            }
+        }
+
+        function loadIcon() {
+            const saved = localStorage.getItem(ICON_KEY);
+            if (!saved) {
+                return icons[0].id;
+            }
+            return icons.some((icon) => icon.id === saved) ? saved : icons[0].id;
+        }
+
+        function loadSongChoice() {
+            const saved = localStorage.getItem(SONG_CHOICE_KEY);
+            if (!saved) {
+                return "auto";
+            }
+            return songChoices.some((choice) => choice.id === saved) ? saved : "auto";
+        }
+
+        function sanitizeAccountName(raw) {
+            return String(raw || "").trim().replace(/\s+/g, " ").slice(0, 20);
+        }
+
+        function hashPassword(input) {
+            const text = String(input || "");
+            let hash = 5381;
+            for (let i = 0; i < text.length; i += 1) {
+                hash = ((hash << 5) + hash) + text.charCodeAt(i);
+                hash |= 0;
+            }
+            return `h${(hash >>> 0).toString(16)}`;
+        }
+
+        function loadAccountsDb() {
+            const raw = localStorage.getItem(ACCOUNT_DB_KEY);
+            if (!raw) {
+                return {};
+            }
+            try {
+                const parsed = JSON.parse(raw);
+                if (!parsed || typeof parsed !== "object") {
+                    return {};
+                }
+                return parsed;
+            } catch {
+                return {};
+            }
+        }
+
+        function saveAccountsDb() {
+            localStorage.setItem(ACCOUNT_DB_KEY, JSON.stringify(accountsDb));
+        }
+
+        function loadCurrentAccountName() {
+            const saved = sanitizeAccountName(localStorage.getItem(CURRENT_ACCOUNT_KEY) || "");
+            if (!saved || !accountsDb[saved]) {
+                return "Guest";
+            }
+            return saved;
+        }
+
+        function saveCurrentAccountName(value) {
+            if (!value || value === "Guest") {
+                localStorage.removeItem(CURRENT_ACCOUNT_KEY);
+                return;
+            }
+            localStorage.setItem(CURRENT_ACCOUNT_KEY, value);
+        }
+
+        function refreshAccountLabel() {
+            accountLabel.textContent = `Account: ${currentAccountName || "Guest"}`;
+        }
+
+        function setAccountInfo(message) {
+            accountInfo.textContent = message;
+        }
+
+        function createAccount() {
+            const username = sanitizeAccountName(accountNameInput.value);
+            const password = accountPassInput.value;
+
+            if (!username || username.length < 3) {
+                setAccountInfo("Create failed: username must be at least 3 characters.");
+                return;
+            }
+            if (!password || password.length < 4) {
+                setAccountInfo("Create failed: password must be at least 4 characters.");
+                return;
+            }
+            if (accountsDb[username]) {
+                setAccountInfo("Create failed: account already exists.");
+                return;
+            }
+
+            accountsDb[username] = { passHash: hashPassword(password), createdAt: Date.now() };
+            saveAccountsDb();
+            currentAccountName = username;
+            saveCurrentAccountName(currentAccountName);
+            refreshAccountLabel();
+            accountPassInput.value = "";
+            setAccountInfo(`Account created and logged in as ${username}.`);
+        }
+
+        function loginAccount() {
+            const username = sanitizeAccountName(accountNameInput.value);
+            const password = accountPassInput.value;
+            const account = accountsDb[username];
+
+            if (!account) {
+                setAccountInfo("Login failed: account not found.");
+                return;
+            }
+            if (account.passHash !== hashPassword(password)) {
+                setAccountInfo("Login failed: incorrect password.");
+                return;
+            }
+
+            currentAccountName = username;
+            saveCurrentAccountName(currentAccountName);
+            refreshAccountLabel();
+            accountPassInput.value = "";
+            setAccountInfo(`Logged in as ${username}.`);
+        }
+
+        function logoutAccount() {
+            currentAccountName = "Guest";
+            saveCurrentAccountName(currentAccountName);
+            refreshAccountLabel();
+            setAccountInfo("Logged out. You are now using Guest.");
+        }
+
+        function normalizeBlockStyle(styleId) {
+            return BLOCK_STYLES.includes(styleId) ? styleId : "classic";
+        }
+
+        function loadCustomLevelObstacles() {
+            const raw = localStorage.getItem(CUSTOM_LEVEL_KEY);
+            if (!raw) {
+                return [];
+            }
+
+            try {
+                const parsed = JSON.parse(raw);
+                if (!Array.isArray(parsed)) {
+                    return [];
+                }
+
+                return parsed
+                    .map((obstacle) => ({
+                        x: Number(obstacle.x),
+                        w: Math.max(12, Number(obstacle.w) || 28),
+                        h: Math.max(18, Number(obstacle.h) || 50),
+                        type: obstacle.type === "block" ? "block" : "spike",
+                        blockStyle: normalizeBlockStyle(obstacle.blockStyle)
+                    }))
+                    .filter((obstacle) => Number.isFinite(obstacle.x) && Number.isFinite(obstacle.w) && Number.isFinite(obstacle.h))
+                    .map((obstacle) => ({
+                        x: Math.max(220, Math.round(obstacle.x)),
+                        w: Math.round(obstacle.w),
+                        h: Math.round(obstacle.h),
+                        type: obstacle.type,
+                        blockStyle: obstacle.blockStyle,
+                        y: groundY - Math.round(obstacle.h)
+                    }))
+                    .sort((a, b) => a.x - b.x);
+            } catch {
+                return [];
+            }
+        }
+
+        function saveBest(value) {
+            localStorage.setItem(BEST_KEY, String(value));
+        }
+
+        function saveUnlockedLevel(value) {
+            localStorage.setItem(UNLOCKED_LEVEL_KEY, String(value));
+        }
+
+        function saveIcon(value) {
+            localStorage.setItem(ICON_KEY, value);
+        }
+
+        function saveSongChoice(value) {
+            localStorage.setItem(SONG_CHOICE_KEY, value);
+        }
+
+        function saveCustomLevelObstacles() {
+            const compact = customLevelObstacles.map((obstacle) => ({
+                x: Math.round(obstacle.x),
+                w: Math.round(obstacle.w),
+                h: Math.round(obstacle.h),
+                type: obstacle.type === "block" ? "block" : "spike",
+                blockStyle: normalizeBlockStyle(obstacle.blockStyle)
+            }));
+            localStorage.setItem(CUSTOM_LEVEL_KEY, JSON.stringify(compact));
+        }
+
+        function getBuilderToolLabel() {
+            if (builderTool === "erase") {
+                return "Erase";
+            }
+            if (builderTool === "block") {
+                return "Block";
+            }
+            return "Spike";
+        }
+
+        function saveBestPercentByLevel() {
+            localStorage.setItem(BEST_PERCENT_KEY, JSON.stringify(bestPercentByLevel));
+        }
+
+        function clearAllSavedDataOnce() {
+            if (localStorage.getItem(CLEAR_ONCE_KEY) === "1") {
+                return;
+            }
+
+            localStorage.removeItem(BEST_KEY);
+            localStorage.removeItem(BEST_PERCENT_KEY);
+            localStorage.removeItem(UNLOCKED_LEVEL_KEY);
+            localStorage.removeItem(ICON_KEY);
+            localStorage.removeItem(SONG_CHOICE_KEY);
+
+            // Cleanup older keys from previous versions.
+            localStorage.removeItem("dash-lite-best");
+            localStorage.removeItem("geometry-dash-free-best");
+            localStorage.removeItem("geometry-dash-free-best-percent");
+            localStorage.removeItem("geometry-dash-free-unlocked-level");
+            localStorage.removeItem("geometry-dash-free-icon");
+            localStorage.removeItem("geometry-dash-free-song-choice");
+
+            localStorage.setItem(CLEAR_ONCE_KEY, "1");
+        }
+
+        function getLevelById(id) {
+            if (id === CUSTOM_LEVEL_ID) {
+                const lastX = customLevelObstacles.length
+                    ? customLevelObstacles[customLevelObstacles.length - 1].x
+                    : 2200;
+                const dynamicTarget = Math.max(120, Math.round((lastX + 1200) / 40));
+                return {
+                    id: CUSTOM_LEVEL_ID,
+                    name: "Custom Builder Level",
+                    target: dynamicTarget,
+                    length: "Custom",
+                    difficulty: customLevelObstacles.length < 20 ? "Easy" : customLevelObstacles.length < 50 ? "Hard" : "Insane",
+                    baseSpeed: 7.2,
+                    gravity: 0.92,
+                    minGap: 50,
+                    maxGap: 100,
+                    obstacleHeight: [24, 110],
+                    obstacleWidth: [24, 36],
+                    doubleChance: 0,
+                    spawnMode: "custom",
+                    songId: "circuit",
+                    palette: { sky: "#2b365e", mid: "#1e2a4a", floor: "#121a2f", line: "#72d9ff" }
+                };
+            }
+            return levels.find((level) => level.id === id) || levels[0];
+        }
+
+        function getBuildById(id) {
+            return builds.find((build) => build.id === id) || builds[0];
+        }
+
+        function getModeById(id) {
+            return modes.find((mode) => mode.id === id) || modes[0];
+        }
+
+        function getIconById(id) {
+            return icons.find((icon) => icon.id === id) || icons[0];
+        }
+
+        function getSongChoiceById(id) {
+            return songChoices.find((choice) => choice.id === id) || songChoices[0];
+        }
+
+        function clampSelection() {
+            if (selectedLevel === CUSTOM_LEVEL_ID) {
+                return;
+            }
+            const unlockAll = launcherMode === "hack" && hacks.unlockAllLevels;
+            const allowedLevel = unlockAll ? levels.length : unlockedLevel;
+            if (selectedLevel > allowedLevel) {
+                selectedLevel = allowedLevel;
+            }
+        }
+
+        function updateHackSpeedLabel() {
+            const multiplier = hacks.noLimitSpeed
+                ? Math.max(0.1, Number(hacks.noLimitSpeedValue) || 1)
+                : hacks.speedMultiplier;
+            const suffix = hacks.noLimitSpeed ? " (NL)" : "";
+            hackSpeedLabel.textContent = `${multiplier.toFixed(1)}x${suffix}`;
+        }
+
+        function syncHackInputs() {
+            hackSpeedValue.value = String(hacks.speedMultiplier);
+            hackNoLimitSpeed.checked = hacks.noLimitSpeed;
+            hackNoLimitSpeedValue.value = String(hacks.noLimitSpeedValue);
+            updateHackSpeedLabel();
+            hackNoclip.checked = hacks.noclip;
+            hackUnlock.checked = hacks.unlockAllLevels;
+            hackHitboxes.checked = hacks.showHitboxes;
+            hackAutoComplete.checked = hacks.autoComplete;
+            hackJumpUfo.checked = hacks.jumpUfo;
+            hackModeSelect.value = hacks.forceGamemode;
+        }
+
+        function updateHackPanelVisibility() {
+            const shouldShow = launcherMode === "hack" && hackPanelOpen;
+            hackPanel.classList.toggle("hidden", !shouldShow);
+        }
+
+        function syncGeodeInputs() {
+            geodeSpeedBoost.checked = geodeMods.speedBoost;
+            geodeLowGravity.checked = geodeMods.lowGravity;
+            geodeHitboxes.checked = geodeMods.showHitboxes;
+            geodeRainbow.checked = geodeMods.rainbowIcon;
+            geodeAutoRetry.checked = geodeMods.autoRetry;
+            geodeClickFrames.checked = geodeMods.clickFrames;
+            geodeGlobed.checked = geodeMods.globedDemo;
+        }
+
+        function updateGeodePanelVisibility() {
+            const shouldShow = launcherMode === "geode" && geodePanelOpen;
+            geodePanel.classList.toggle("hidden", !shouldShow);
+        }
+
+        function updatePracticeTabVisibility() {
+            const show = Boolean(activePracticeMode) && running;
+            practiceTab.classList.toggle("hidden", !show);
+        }
+
+        function applyHackModeDefaults() {
+            if (launcherMode === "hack") {
+                hacks.noclip = true;
+                hacks.unlockAllLevels = true;
+                hacks.speedMultiplier = 1;
+                hacks.noLimitSpeed = false;
+                hacks.noLimitSpeedValue = 5;
+                hacks.showHitboxes = false;
+                hacks.autoComplete = false;
+                hacks.jumpUfo = false;
+                hacks.forceGamemode = "off";
+            } else {
+                hacks.noclip = false;
+                hacks.unlockAllLevels = false;
+                hacks.speedMultiplier = 1;
+                hacks.noLimitSpeed = false;
+                hacks.noLimitSpeedValue = 5;
+                hacks.showHitboxes = false;
+                hacks.autoComplete = false;
+                hacks.jumpUfo = false;
+                hacks.forceGamemode = "off";
+            }
+            syncHackInputs();
+            updateHackPanelVisibility();
+        }
+
+        function applyGeodeModeDefaults() {
+            geodeMods.speedBoost = true;
+            geodeMods.lowGravity = false;
+            geodeMods.showHitboxes = false;
+            geodeMods.rainbowIcon = true;
+            geodeMods.autoRetry = false;
+            geodeMods.clickFrames = true;
+            geodeMods.globedDemo = false;
+            syncGeodeInputs();
+            updateGeodePanelVisibility();
+        }
+
+        function getForcedHackModeId() {
+            if (launcherMode !== "hack") {
+                return "off";
+            }
+            if (hacks.jumpUfo) {
+                return "ufo";
+            }
+            return hacks.forceGamemode;
+        }
+
+        function applyHackModeOverride() {
+            if (launcherMode !== "hack") {
+                return;
+            }
+
+            const forcedModeId = getForcedHackModeId();
+            if (!forcedModeId || forcedModeId === "off") {
+                return;
+            }
+
+            const forced = getModeById(forcedModeId);
+            if (activeMode.id === forced.id) {
+                return;
+            }
+
+            activeMode = forced;
+            modeLabel.textContent = `Mode: ${activeMode.name}`;
+
+            // Stabilize movement when switching mode mid-run.
+            player.vy = 0;
+            player.gravityDir = 1;
+            player.onGround = true;
+            player.onCeiling = false;
+            player.y = Math.min(player.y, groundY - player.h);
+        }
+
+        function getGeodeGravityMultiplier() {
+            if (launcherMode === "geode" && geodeMods.lowGravity) {
+                return 0.72;
+            }
+            return 1;
+        }
+
+        function processGeodeClickFrames() {
+            if (!(launcherMode === "geode" && geodeMods.clickFrames)) {
+                return;
+            }
+            if (!running || gameOver || geodeClickBufferFrames <= 0) {
+                return;
+            }
+
+            geodeClickBufferFrames -= 1;
+            if (activeMode.id === "cube" && player.onGround) {
+                performTapAction();
+                geodeClickBufferFrames = 0;
+            } else if (activeMode.id === "ufo") {
+                performTapAction();
+                geodeClickBufferFrames = 0;
+            }
+        }
+
+        function updateLauncherNote() {
+            if (launcherMode === "hack") {
+                launcherNote.textContent = "Hack version active. Press TAB for hack menu.";
+            } else if (launcherMode === "geode") {
+                launcherNote.textContent = "Geode version active. Extra polish + mod-style experience.";
+            } else if (launcherMode === "normal") {
+                launcherNote.textContent = "Normal version active: classic progression and collisions.";
+            } else {
+                launcherNote.textContent = "Choose a version: Normal, Hack, or Geode.";
+            }
+        }
+
+        function applyLauncherMode(mode) {
+            launcherMode = mode;
+            launcher.classList.add("hidden");
+            hackPanelOpen = mode === "hack";
+            geodePanelOpen = mode === "geode";
+            applyHackModeDefaults();
+            applyGeodeModeDefaults();
+            updateLauncherNote();
+            updateSelectors();
+            resetGame();
+            showOverlay(
+                "Main Menu",
+                mode === "hack"
+                    ? "Hack version loaded. Press Start Game to play."
+                    : mode === "geode"
+                        ? "Geode version loaded. Press Start Game to play."
+                    : "Normal version loaded. Press Start Game to play."
+            );
+        }
+
+        function ensureAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new window.AudioContext();
+            }
+            if (audioCtx.state === "suspended") {
+                audioCtx.resume();
+            }
+        }
+
+        function midiToFrequency(midi) {
+            return 440 * (2 ** ((midi - 69) / 12));
+        }
+
+        function playTone(midi, type, gainValue, duration, detune = 0) {
+            if (!audioCtx || midi == null) {
+                return;
+            }
+
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.value = midiToFrequency(midi);
+            osc.detune.value = detune;
+
+            gain.gain.setValueAtTime(0.0001, now);
+            gain.gain.exponentialRampToValueAtTime(gainValue, now + 0.01);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now);
+            osc.stop(now + duration + 0.02);
+        }
+
+        function stopSong() {
+            if (songTimer) {
+                clearInterval(songTimer);
+                songTimer = null;
+            }
+
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.src = "";
+                currentAudio = null;
+            }
+
+            currentSongId = null;
+            songStep = 0;
+        }
+
+        function getSongNameForLevel(level) {
+            const songChoice = getSongChoiceById(selectedSongChoice);
+            if (songChoice.type !== "auto") {
+                return songChoice.name;
+            }
+
+            const customTrack = customLevelTracks[level.id];
+            if (customTrack) {
+                return customTrack.name;
+            }
+            const song = songs[level.songId];
+            return song ? song.name : "-";
+        }
+
+        function updateMusicLabel() {
+            const level = activeLevel || getLevelById(selectedLevel);
+            musicLabel.textContent = `Song: ${getSongNameForLevel(level)}`;
+            muteBtn.textContent = `Mute: ${muted ? "On" : "Off"}`;
+        }
+
+        function startSong(level) {
+            stopSong();
+            updateMusicLabel();
+
+            if (muted) {
+                return;
+            }
+
+            const songChoice = getSongChoiceById(selectedSongChoice);
+            if (songChoice.type === "file") {
+                currentAudio = new Audio(songChoice.file);
+                currentAudio.loop = true;
+                currentAudio.volume = 0.45;
+                currentAudio.play().catch(() => {
+                    currentAudio = null;
+                    startSongFallback(level.songId);
+                });
+                return;
+            }
+
+            if (songChoice.type === "synth") {
+                startSongFallback(songChoice.songId);
+                return;
+            }
+
+            const customTrack = customLevelTracks[level.id];
+            if (customTrack) {
+                currentAudio = new Audio(customTrack.file);
+                currentAudio.loop = true;
+                currentAudio.volume = 0.45;
+                currentAudio.play().catch(() => {
+                    currentAudio = null;
+                    startSongFallback(level.songId);
+                });
+                return;
+            }
+
+            startSongFallback(level.songId);
+        }
+
+        function startSongFallback(songId) {
+            ensureAudioContext();
+
+            const song = songs[songId];
+            if (!song) {
+                return;
+            }
+
+            const stepSeconds = 60 / song.tempo / 2;
+            currentSongId = songId;
+            songStep = 0;
+
+            songTimer = setInterval(() => {
+                const index = songStep % song.melody.length;
+                const note = song.melody[index];
+                const bass = song.bass[index % song.bass.length];
+
+                playTone(note, "square", 0.045, stepSeconds * 0.9, 0);
+                playTone(bass, "sawtooth", 0.025, stepSeconds * 0.95, -5);
+                songStep += 1;
+            }, stepSeconds * 1000);
+        }
+
+        function updateSelectors() {
+            clampSelection();
+
+            levelSelect.innerHTML = "";
+            const unlockAll = launcherMode === "hack" && hacks.unlockAllLevels;
+            const allowedLevel = unlockAll ? levels.length : unlockedLevel;
+            levels.forEach((level) => {
+                const option = document.createElement("option");
+                option.value = String(level.id);
+                option.textContent = level.id <= allowedLevel
+                    ? `Level ${level.id}: ${level.name}`
+                    : `Level ${level.id}: Locked`;
+                option.disabled = level.id > allowedLevel;
+                if (level.id === selectedLevel) {
+                    option.selected = true;
+                }
+                levelSelect.append(option);
+            });
+
+            const customOption = document.createElement("option");
+            customOption.value = "custom";
+            const spikeCount = customLevelObstacles.filter((obstacle) => obstacle.type !== "block").length;
+            const blockCount = customLevelObstacles.length - spikeCount;
+            customOption.textContent = `Custom: Builder Level (${spikeCount} spikes, ${blockCount} blocks)`;
+            customOption.selected = selectedLevel === CUSTOM_LEVEL_ID;
+            levelSelect.append(customOption);
+
+            buildSelect.innerHTML = "";
+            builds.forEach((build) => {
+                const option = document.createElement("option");
+                option.value = build.id;
+                option.textContent = build.name;
+                if (build.id === selectedBuild) {
+                    option.selected = true;
+                }
+                buildSelect.append(option);
+            });
+
+            modeSelect.innerHTML = "";
+            modes.forEach((mode) => {
+                const option = document.createElement("option");
+                option.value = mode.id;
+                option.textContent = mode.name;
+                if (mode.id === selectedMode) {
+                    option.selected = true;
+                }
+                modeSelect.append(option);
+            });
+
+            iconSelect.innerHTML = "";
+            icons.forEach((icon) => {
+                const option = document.createElement("option");
+                option.value = icon.id;
+                option.textContent = icon.name;
+                if (icon.id === selectedIcon) {
+                    option.selected = true;
+                }
+                iconSelect.append(option);
+            });
+
+            songSelect.innerHTML = "";
+            songChoices.forEach((choice) => {
+                const option = document.createElement("option");
+                option.value = choice.id;
+                option.textContent = choice.name;
+                if (choice.id === selectedSongChoice) {
+                    option.selected = true;
+                }
+                songSelect.append(option);
+            });
+
+            practiceSelect.value = selectedPracticeMode;
+            featureSetSelect.value = selectedFeatureSet;
+            builderBlockStyleSelect.value = normalizeBlockStyle(builderBlockStyle);
+
+            const level = getLevelById(selectedLevel);
+            const build = getBuildById(selectedBuild);
+            const mode = getModeById(selectedMode);
+            const icon = getIconById(selectedIcon);
+            const songChoice = getSongChoiceById(selectedSongChoice);
+            levelInfo.textContent = `Length: ${level.length}. Difficulty: ${level.difficulty}. Target ${level.target}. Song: ${getSongNameForLevel(level)}`;
+            buildInfo.textContent = build.description;
+            modeInfo.textContent = mode.description;
+            iconInfo.textContent = icon.description;
+            songInfo.textContent = songChoice.description;
+            practiceInfo.textContent = selectedPracticeMode === "on"
+                ? "On: respawn from checkpoints. Z = place, X = delete."
+                : "Off: classic one-attempt gameplay.";
+            featureSetInfo.textContent = selectedFeatureSet === "twoTwo"
+                ? "2.2 Mode: Dash orbs, moving obstacles, and camera pulse FX."
+                : "Classic mode: old-school behavior.";
+            builderInfo.textContent = builderMode
+                ? `Builder ON | Tool: ${getBuilderToolLabel()} | Block Style: ${normalizeBlockStyle(builderBlockStyle)} | Obstacles: ${customLevelObstacles.length} | Pan: A/D`
+                : `Build a custom level: click Open Builder, then click canvas to place (${customLevelObstacles.length} saved).`;
+            builderToggleBtn.textContent = builderMode ? "Close Builder" : "Open Builder";
+            builderToolBtn.textContent = `Tool: ${getBuilderToolLabel()}`;
+            refreshAccountLabel();
+            levelLabel.textContent = `Level: ${level.id}`;
+            difficultyLabel.textContent = `Difficulty: ${level.difficulty}`;
+            practiceLabel.textContent = `Practice: ${selectedPracticeMode === "on" ? "On" : "Off"}`;
+            buildLabel.textContent = `Build: ${build.name}`;
+            modeLabel.textContent = `Mode: ${mode.name}`;
+            iconLabel.textContent = `Icon: ${icon.name}`;
+            nextIconBtn.textContent = `Icon Setting: ${icon.name}`;
+            updateMusicLabel();
+        }
+
+        function resetGame() {
+            activeLevel = getLevelById(selectedLevel);
+            activeBuild = getBuildById(selectedBuild);
+            activeMode = getModeById(selectedMode);
+            activeIcon = getIconById(selectedIcon);
+            activePracticeMode = selectedPracticeMode === "on";
+            activeTwoTwo = selectedFeatureSet === "twoTwo";
+            inputHeld = false;
+            lastWaveTapAt = 0;
+            waveStraightUntil = 0;
+
+            player = {
+                x: 150,
+                y: groundY - activeBuild.size,
+                w: activeBuild.size,
+                h: activeBuild.size,
+                vy: 0,
+                onGround: true,
+                onCeiling: false,
+                gravityDir: 1,
+                angle: 0
+            };
+
+            obstacles = [];
+            dashOrbs = [];
+            particles = [];
+            waveTrail = [];
+            score = 0;
+            speed = activeLevel.baseSpeed * activeBuild.speedScale;
+            nextObstacleTimer = 75;
+            gameOver = false;
+            checkpointState = null;
+            lastAutoCheckpointScore = 0;
+            cameraPulse = 0;
+
+            if (activeLevel.spawnMode === "custom") {
+                obstacles = customLevelObstacles.map((obstacle) => ({
+                    x: obstacle.x,
+                    y: groundY - obstacle.h,
+                    w: obstacle.w,
+                    h: obstacle.h,
+                    type: obstacle.type === "block" ? "block" : "spike",
+                    blockStyle: normalizeBlockStyle(obstacle.blockStyle),
+                    baseY: groundY - obstacle.h,
+                    motionPhase: 0,
+                    motionAmp: 0
+                }));
+                nextObstacleTimer = Number.POSITIVE_INFINITY;
+            }
+
+            if (activePracticeMode) {
+                saveCheckpoint();
+            }
+
+            applyHackModeOverride();
+
+            updateScore();
+        }
+
+        function setBuilderMode(nextState) {
+            builderMode = nextState;
+            if (builderMode) {
+                running = false;
+                gameOver = false;
+                overlay.classList.add("hidden");
+                stopSong();
+            } else {
+                showOverlay("Main Menu", "Builder closed. Choose settings, then launch the run.");
+            }
+            updateSelectors();
+        }
+
+        function toggleBuilderTool() {
+            if (builderTool === "spike") {
+                builderTool = "block";
+            } else if (builderTool === "block") {
+                builderTool = "erase";
+            } else {
+                builderTool = "spike";
+            }
+            builderToolBtn.textContent = `Tool: ${getBuilderToolLabel()}`;
+            updateSelectors();
+        }
+
+        function cycleBuilderBlockStyle(step = 1) {
+            const current = normalizeBlockStyle(builderBlockStyle);
+            const currentIndex = BLOCK_STYLES.indexOf(current);
+            const nextIndex = (currentIndex + step + BLOCK_STYLES.length) % BLOCK_STYLES.length;
+            builderBlockStyle = BLOCK_STYLES[nextIndex];
+            builderBlockStyleSelect.value = builderBlockStyle;
+            updateSelectors();
+        }
+
+        function panBuilder(delta) {
+            builderCameraX = Math.max(0, builderCameraX + delta);
+        }
+
+        function findClosestBuilderObstacle(worldX) {
+            let bestIndex = -1;
+            let bestDist = Infinity;
+            for (let i = 0; i < customLevelObstacles.length; i += 1) {
+                const obstacle = customLevelObstacles[i];
+                const center = obstacle.x + obstacle.w / 2;
+                const dist = Math.abs(center - worldX);
+                if (dist < bestDist) {
+                    bestDist = dist;
+                    bestIndex = i;
+                }
+            }
+            return { bestIndex, bestDist };
+        }
+
+        function handleBuilderPointer(event) {
+            const rect = canvas.getBoundingClientRect();
+            const localX = event.clientX - rect.left;
+            const localY = event.clientY - rect.top;
+            const worldX = builderCameraX + localX;
+
+            if (builderTool === "erase") {
+                const { bestIndex, bestDist } = findClosestBuilderObstacle(worldX);
+                if (bestIndex >= 0 && bestDist <= 24) {
+                    customLevelObstacles.splice(bestIndex, 1);
+                    saveCustomLevelObstacles();
+                    updateSelectors();
+                }
+                return;
+            }
+
+            const snapX = Math.max(220, Math.round(worldX / 20) * 20);
+            const maxHeight = groundY - ceilingY - 12;
+            const desiredHeight = groundY - localY;
+            const snapH = Math.max(20, Math.min(maxHeight, Math.round(desiredHeight / 6) * 6));
+
+            const { bestIndex, bestDist } = findClosestBuilderObstacle(snapX + 14);
+            if (bestIndex >= 0 && bestDist <= 18) {
+                customLevelObstacles[bestIndex] = {
+                    x: snapX,
+                    w: 28,
+                    h: snapH,
+                    type: builderTool === "block" ? "block" : "spike",
+                    blockStyle: builderTool === "block" ? normalizeBlockStyle(builderBlockStyle) : "classic",
+                    y: groundY - snapH
+                };
+            } else {
+                customLevelObstacles.push({
+                    x: snapX,
+                    w: 28,
+                    h: snapH,
+                    type: builderTool === "block" ? "block" : "spike",
+                    blockStyle: builderTool === "block" ? normalizeBlockStyle(builderBlockStyle) : "classic",
+                    y: groundY - snapH
+                });
+                customLevelObstacles.sort((a, b) => a.x - b.x);
+            }
+
+            saveCustomLevelObstacles();
+            updateSelectors();
+        }
+
+        function drawBuilderScene() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawGrid();
+            drawGround();
+
+            for (const obstacle of customLevelObstacles) {
+                const screenX = obstacle.x - builderCameraX;
+                if (screenX + obstacle.w < -20 || screenX > canvas.width + 20) {
+                    continue;
+                }
+                drawObstacle({
+                    x: screenX,
+                    y: groundY - obstacle.h,
+                    w: obstacle.w,
+                    h: obstacle.h,
+                    type: obstacle.type === "block" ? "block" : "spike",
+                    blockStyle: normalizeBlockStyle(obstacle.blockStyle)
+                });
+            }
+
+            ctx.save();
+            ctx.fillStyle = "rgba(5, 18, 35, 0.75)";
+            ctx.fillRect(12, 12, 372, 56);
+            ctx.strokeStyle = "rgba(120, 210, 255, 0.7)";
+            ctx.strokeRect(12, 12, 372, 56);
+            ctx.fillStyle = "#dff4ff";
+            ctx.font = "14px Chakra Petch, sans-serif";
+            ctx.fillText(`Builder | Tool: ${getBuilderToolLabel().toUpperCase()} | Obstacles: ${customLevelObstacles.length}`, 20, 34);
+            ctx.fillStyle = "#8fd6ff";
+            ctx.fillText(`Click to place/edit | Style: ${normalizeBlockStyle(builderBlockStyle)} | A/D pan | T tool | B style`, 20, 54);
+            ctx.restore();
+        }
+
+        function startGame() {
+            resetGame();
+            running = true;
+            overlay.classList.add("hidden");
+            updatePracticeTabVisibility();
+            try {
+                startSong(activeLevel);
+            } catch (error) {
+                // Audio should never block gameplay start.
+                stopSong();
+                console.warn("Song failed to start:", error);
+            }
+        }
+
+        function safeStartGame() {
+            if (!launcherMode) {
+                return;
+            }
+            const overlayVisible = !overlay.classList.contains("hidden");
+            if (running && !overlayVisible) {
+                return;
+            }
+            startGame();
+        }
+
+        function showOverlay(title, text) {
+            running = false;
+            overlayTitle.textContent = title;
+            overlayText.textContent = text;
+            overlay.classList.remove("hidden");
+            updatePracticeTabVisibility();
+            stopSong();
+        }
+
+        function updateScore() {
+            const activeTarget = activeLevel ? activeLevel.target : getLevelById(selectedLevel).target;
+            const progress = Math.min(100, Math.floor((score / activeTarget) * 100));
+            const levelId = activeLevel ? activeLevel.id : selectedLevel;
+            const savedBestPercent = Number(bestPercentByLevel[levelId] || 0);
+            const shownBestPercent = Math.max(savedBestPercent, progress);
+            scoreLabel.textContent = `Score: ${Math.floor(score)}`;
+            percentLabel.textContent = `Progress: ${progress}%`;
+            bestPercentLabel.textContent = `Best %: ${shownBestPercent}%`;
+            bestLabel.textContent = `Best: ${best}`;
+            levelLabel.textContent = `Level: ${activeLevel ? activeLevel.id : selectedLevel}`;
+            difficultyLabel.textContent = `Difficulty: ${activeLevel ? activeLevel.difficulty : getLevelById(selectedLevel).difficulty}`;
+            practiceLabel.textContent = `Practice: ${activePracticeMode ? "On" : "Off"}`;
+            buildLabel.textContent = `Build: ${activeBuild ? activeBuild.name : getBuildById(selectedBuild).name}`;
+            modeLabel.textContent = `Mode: ${activeMode ? activeMode.name : getModeById(selectedMode).name}`;
+            iconLabel.textContent = `Icon: ${activeIcon ? activeIcon.name : getIconById(selectedIcon).name}`;
+            updatePracticeTabVisibility();
+        }
+
+        function saveCheckpoint() {
+            checkpointState = {
+                player: {
+                    y: player.y,
+                    vy: player.vy,
+                    onGround: player.onGround,
+                    onCeiling: player.onCeiling,
+                    gravityDir: player.gravityDir,
+                    angle: player.angle
+                },
+                obstacles: obstacles.map((obs) => ({ ...obs })),
+                dashOrbs: dashOrbs.map((orb) => ({ ...orb })),
+                score,
+                nextObstacleTimer
+            };
+        }
+
+        function restoreCheckpoint() {
+            if (!checkpointState) {
+                return false;
+            }
+
+            player.y = checkpointState.player.y;
+            player.vy = checkpointState.player.vy;
+            player.onGround = checkpointState.player.onGround;
+            player.onCeiling = checkpointState.player.onCeiling;
+            player.gravityDir = checkpointState.player.gravityDir;
+            player.angle = checkpointState.player.angle;
+
+            obstacles = checkpointState.obstacles.map((obs) => ({ ...obs }));
+            dashOrbs = (checkpointState.dashOrbs || []).map((orb) => ({ ...orb }));
+            score = checkpointState.score;
+            nextObstacleTimer = checkpointState.nextObstacleTimer;
+            particles = [];
+            waveTrail = [];
+            return true;
+        }
+
+        function commitBestPercent() {
+            if (!activeLevel) {
+                return;
+            }
+
+            const progress = Math.min(100, Math.floor((score / activeLevel.target) * 100));
+            const previous = Number(bestPercentByLevel[activeLevel.id] || 0);
+            if (progress > previous) {
+                bestPercentByLevel[activeLevel.id] = progress;
+                saveBestPercentByLevel();
+            }
+        }
+
+        function performTapAction() {
+            if (!running || gameOver) {
+                return;
+            }
+
+            if (activeTwoTwo) {
+                cameraPulse = 1;
+            }
+
+            if (activeMode.id === "cube") {
+                if (player.onGround) {
+                    player.vy = activeBuild.jumpForce;
+                    player.onGround = false;
+                }
+                return;
+            }
+
+            if (activeMode.id === "ufo") {
+                player.vy = -11.2;
+                return;
+            }
+
+            if (activeMode.id === "ball") {
+                player.gravityDir *= -1;
+                player.vy = -player.gravityDir * 3.2;
+                player.onGround = false;
+                player.onCeiling = false;
+                return;
+            }
+
+            if (activeMode.id === "spider") {
+                if (player.gravityDir === 1) {
+                    player.gravityDir = -1;
+                    player.y = ceilingY;
+                    player.onCeiling = true;
+                    player.onGround = false;
+                } else {
+                    player.gravityDir = 1;
+                    player.y = groundY - player.h;
+                    player.onGround = true;
+                    player.onCeiling = false;
+                }
+                player.vy = 0;
+                return;
+            }
+
+            if (activeMode.id === "swing") {
+                player.gravityDir *= -1;
+                player.vy = -player.gravityDir * 4.6;
+            }
+        }
+
+        function performReleaseAction() {
+            if (!running || gameOver) {
+                return;
+            }
+
+            if (activeMode.id === "robot" && player.onGround) {
+                const heldSeconds = Math.min(0.4, (performance.now() - pressStartedAt) / 1000);
+                const boost = heldSeconds * 10;
+                player.vy = activeBuild.jumpForce - boost;
+                player.onGround = false;
+            }
+        }
+
+        function applyModeMovement() {
+            const geodeGravityScale = getGeodeGravityMultiplier();
+
+            if (activeMode.id === "ship") {
+                const thrust = inputHeld ? -0.92 : 0.56;
+                player.vy += thrust;
+                player.vy = Math.max(-8.4, Math.min(8.4, player.vy));
+                player.y += player.vy;
+                player.angle = player.vy * 0.055;
+                return;
+            }
+
+            if (activeMode.id === "wave") {
+                const waveSpeed = 7.8;
+                const now = performance.now();
+                let targetVy;
+                if (inputHeld) {
+                    targetVy = -waveSpeed;
+                } else if (now < waveStraightUntil) {
+                    targetVy = 0;
+                } else {
+                    targetVy = waveSpeed;
+                }
+
+                // Smooth velocity changes for less jitter and cleaner wave control.
+                player.vy += (targetVy - player.vy) * 0.48;
+                player.y += player.vy;
+                player.angle = Math.max(-0.8, Math.min(0.8, player.vy * 0.12));
+                return;
+            }
+
+            if (activeMode.id === "robot") {
+                const gravity = activeLevel.gravity * geodeGravityScale * activeBuild.gravityScale * 1.03;
+                player.vy += gravity;
+                player.y += player.vy;
+                player.angle = player.onGround ? 0 : player.angle + 0.12;
+                return;
+            }
+
+            if (activeMode.id === "ball") {
+                const gravity = activeLevel.gravity * geodeGravityScale * activeBuild.gravityScale;
+                player.vy += gravity * player.gravityDir;
+                player.vy = Math.max(-11, Math.min(11, player.vy));
+                player.y += player.vy;
+                player.angle += 0.18;
+                return;
+            }
+
+            if (activeMode.id === "swing") {
+                const gravity = activeLevel.gravity * geodeGravityScale * activeBuild.gravityScale * 0.9;
+                player.vy += gravity * player.gravityDir;
+                player.vy = Math.max(-10.5, Math.min(10.5, player.vy));
+                player.y += player.vy;
+                player.angle = player.vy * 0.06;
+                return;
+            }
+
+            if (activeMode.id === "spider") {
+                const gravity = activeLevel.gravity * geodeGravityScale * activeBuild.gravityScale;
+                player.vy += gravity * player.gravityDir;
+                player.y += player.vy;
+                player.angle = 0;
+                return;
+            }
+
+            // Cube/UFO default gravity-based movement.
+            const gravity = activeLevel.gravity * geodeGravityScale * activeBuild.gravityScale;
+            player.vy += gravity;
+            player.y += player.vy;
+            if (player.y + player.h >= groundY) {
+                player.angle = 0;
+            } else {
+                player.angle += 0.09;
+            }
+        }
+
+        function clampPlayerToBounds() {
+            player.onGround = false;
+            player.onCeiling = false;
+            const noCeilingLimit = activeMode.id === "cube" || activeMode.id === "robot";
+
+            if (activeMode.id === "wave") {
+                if (player.y <= ceilingY) {
+                    player.y = ceilingY;
+                    player.vy = Math.max(0, player.vy * 0.35);
+                    player.onCeiling = true;
+                }
+
+                if (player.y + player.h >= groundY) {
+                    player.y = groundY - player.h;
+                    player.vy = Math.min(0, player.vy * 0.35);
+                    player.onGround = true;
+                }
+                return;
+            }
+
+            if (!noCeilingLimit && player.y <= ceilingY) {
+                player.y = ceilingY;
+                player.vy = 0;
+                player.onCeiling = true;
+            }
+
+            if (player.y + player.h >= groundY) {
+                player.y = groundY - player.h;
+                player.vy = 0;
+                player.onGround = true;
+            }
+        }
+
+        function handleInputPress() {
+            if (!running) {
+                safeStartGame();
+            }
+            if (!inputHeld) {
+                pressStartedAt = performance.now();
+                justPressed = true;
+                inputHeld = true;
+
+                if (activeMode.id === "wave") {
+                    const spamWindowMs = 125;
+                    const straightDurationMs = 120;
+                    if (pressStartedAt - lastWaveTapAt <= spamWindowMs) {
+                        waveStraightUntil = pressStartedAt + straightDurationMs;
+                    }
+                    lastWaveTapAt = pressStartedAt;
+                }
+
+                if (launcherMode === "geode" && geodeMods.clickFrames && (activeMode.id === "cube" || activeMode.id === "ufo")) {
+                    geodeClickBufferFrames = 3;
+                } else if (activeMode.id !== "robot") {
+                    performTapAction();
+                }
+            }
+        }
+
+        function handleInputRelease() {
+            if (!inputHeld) {
+                return;
+            }
+            inputHeld = false;
+            if (activeMode.id === "robot") {
+                performReleaseAction();
+            }
+        }
+
+        function spawnObstacle() {
+            if (activeLevel.spawnMode === "jump-two") {
+                spawnJumpTwoPattern();
+                return;
+            }
+
+            if (activeLevel.spawnMode === "dash-train") {
+                spawnDashTrainPattern();
+                return;
+            }
+
+            const widthMin = activeLevel.obstacleWidth[0];
+            const widthMax = activeLevel.obstacleWidth[1];
+            const heightMin = activeLevel.obstacleHeight[0];
+            const heightMax = activeLevel.obstacleHeight[1];
+
+            const width = widthMin + Math.random() * (widthMax - widthMin);
+            const height = heightMin + Math.random() * (heightMax - heightMin);
+
+            const primary = {
+                x: canvas.width + width,
+                y: groundY - height,
+                w: width,
+                h: height
+            };
+            tagObstacleMotion(primary);
+            obstacles.push(primary);
+
+            if (Math.random() < activeLevel.doubleChance) {
+                const gap = 10 + Math.random() * 18;
+                const width2 = widthMin + Math.random() * (widthMax - widthMin);
+                const height2 = heightMin + Math.random() * (heightMax - heightMin);
+                const secondary = {
+                    x: primary.x + primary.w + gap,
+                    y: groundY - height2,
+                    w: width2,
+                    h: height2
+                };
+                tagObstacleMotion(secondary);
+                obstacles.push(secondary);
+            }
+        }
+
+        function tagObstacleMotion(obstacle) {
+            obstacle.baseY = obstacle.y;
+            obstacle.motionPhase = Math.random() * Math.PI * 2;
+            obstacle.motionAmp = activeTwoTwo ? (Math.random() < 0.35 ? 6 + Math.random() * 10 : 0) : 0;
+        }
+
+        function spawnJumpTwoPattern() {
+            const widthMin = activeLevel.obstacleWidth[0];
+            const widthMax = activeLevel.obstacleWidth[1];
+            const baseX = canvas.width + 34;
+            const firstHeight = 32 + Math.random() * 16;
+            const secondHeight = 52 + Math.random() * 20;
+
+            const first = {
+                x: baseX,
+                y: groundY - firstHeight,
+                w: widthMin + Math.random() * (widthMax - widthMin),
+                h: firstHeight
+            };
+            tagObstacleMotion(first);
+            obstacles.push(first);
+
+            const second = {
+                x: baseX + 64 + Math.random() * 12,
+                y: groundY - secondHeight,
+                w: widthMin + Math.random() * (widthMax - widthMin),
+                h: secondHeight
+            };
+            tagObstacleMotion(second);
+            obstacles.push(second);
+        }
+
+        function spawnDashTrainPattern() {
+            const widthMin = activeLevel.obstacleWidth[0];
+            const widthMax = activeLevel.obstacleWidth[1];
+            const baseX = canvas.width + 26;
+            let x = baseX;
+
+            for (let i = 0; i < 3; i += 1) {
+                const height = 28 + Math.random() * 22;
+                const width = widthMin + Math.random() * (widthMax - widthMin);
+                const trainObs = { x, y: groundY - height, w: width, h: height };
+                tagObstacleMotion(trainObs);
+                obstacles.push(trainObs);
+                x += width + 22 + Math.random() * 8;
+            }
+
+            if (Math.random() < 0.6) {
+                const finisherHeight = 54 + Math.random() * 20;
+                const finisher = {
+                    x: x + 16,
+                    y: groundY - finisherHeight,
+                    w: widthMin + Math.random() * (widthMax - widthMin),
+                    h: finisherHeight
+                };
+                tagObstacleMotion(finisher);
+                obstacles.push(finisher);
+            }
+        }
+
+        function spawnDashOrb() {
+            if (!activeTwoTwo) {
+                return;
+            }
+
+            const orbYMin = ceilingY + 28;
+            const orbYMax = groundY - player.h - 20;
+            dashOrbs.push({
+                x: canvas.width + 36,
+                y: orbYMin + Math.random() * Math.max(4, orbYMax - orbYMin),
+                r: 12,
+                used: false
+            });
+        }
+
+        function tryActivateDashOrb() {
+            if (!activeTwoTwo || !justPressed || !dashOrbs.length) {
+                return;
+            }
+
+            const playerCenterX = player.x + player.w / 2;
+            const playerCenterY = player.y + player.h / 2;
+            for (const orb of dashOrbs) {
+                if (orb.used) {
+                    continue;
+                }
+
+                const dx = playerCenterX - orb.x;
+                const dy = playerCenterY - orb.y;
+                const triggerRange = orb.r + Math.max(player.w, player.h) * 0.75;
+                if (dx * dx + dy * dy <= triggerRange * triggerRange) {
+                    orb.used = true;
+                    player.vy = -16.8;
+                    player.onGround = false;
+                    cameraPulse = 1;
+                    break;
+                }
+            }
+        }
+
+        function addCrashParticles() {
+            for (let i = 0; i < 22; i += 1) {
+                particles.push({
+                    x: player.x + player.w / 2,
+                    y: player.y + player.h / 2,
+                    vx: (Math.random() - 0.5) * 7,
+                    vy: (Math.random() - 0.5) * 7,
+                    life: 30 + Math.random() * 20
+                });
+            }
+        }
+
+        function intersects(a, b) {
+            return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+        }
+
+        function getPlayerHitbox() {
+            if (activeMode && activeMode.id === "wave") {
+                const inset = Math.max(8, player.w * 0.26);
+                return {
+                    x: player.x + inset,
+                    y: player.y + inset,
+                    w: player.w - inset * 2,
+                    h: player.h - inset * 2
+                };
+            }
+
+            return {
+                x: player.x,
+                y: player.y,
+                w: player.w,
+                h: player.h
+            };
+        }
+
+        function updateWaveTrail() {
+            if (!activeMode || activeMode.id !== "wave") {
+                waveTrail = [];
+                return;
+            }
+
+            waveTrail.push({
+                x: player.x + player.w / 2,
+                y: player.y + player.h / 2,
+                life: 26
+            });
+
+            waveTrail.forEach((node) => {
+                node.life -= 1;
+            });
+            waveTrail = waveTrail.filter((node) => node.life > 0);
+        }
+
+        function update() {
+            if (!running || gameOver) {
+                return;
+            }
+
+            applyHackModeOverride();
+
+            score += 0.11;
+            speed = activeLevel.baseSpeed * activeBuild.speedScale + score / 120;
+            if (launcherMode === "hack") {
+                const speedMultiplier = hacks.noLimitSpeed
+                    ? Math.max(0.1, Number(hacks.noLimitSpeedValue) || 1)
+                    : hacks.speedMultiplier;
+                speed *= speedMultiplier;
+            } else if (launcherMode === "geode" && geodeMods.speedBoost) {
+                speed *= 1.22;
+            }
+
+            if (activePracticeMode && score - lastAutoCheckpointScore >= 35) {
+                saveCheckpoint();
+                lastAutoCheckpointScore = score;
+            }
+
+            processGeodeClickFrames();
+
+            applyModeMovement();
+            clampPlayerToBounds();
+            tryActivateDashOrb();
+            updateWaveTrail();
+            if (gameOver) {
+                return;
+            }
+
+            nextObstacleTimer -= 1;
+            if (activeLevel.spawnMode !== "custom" && nextObstacleTimer <= 0) {
+                spawnObstacle();
+                if (activeTwoTwo && Math.random() < 0.34) {
+                    spawnDashOrb();
+                }
+                const minGap = activeLevel.minGap;
+                const maxGap = activeLevel.maxGap;
+                nextObstacleTimer = Math.max(30, minGap + Math.random() * (maxGap - minGap));
+            }
+
+            for (const obstacle of obstacles) {
+                obstacle.x -= speed;
+                if (activeTwoTwo && obstacle.motionAmp > 0) {
+                    const swing = Math.sin(score * 0.2 + obstacle.motionPhase) * obstacle.motionAmp;
+                    obstacle.y = Math.max(ceilingY + 2, Math.min(groundY - obstacle.h, obstacle.baseY + swing));
+                }
+            }
+
+            obstacles = obstacles.filter((obs) => obs.x + obs.w > -40);
+
+            for (const orb of dashOrbs) {
+                orb.x -= speed;
+            }
+            dashOrbs = dashOrbs.filter((orb) => orb.x + orb.r > -20 && !orb.used);
+
+            if (launcherMode === "geode" && geodeMods.globedDemo) {
+                ghostHistory.push({
+                    x: player.x,
+                    y: player.y,
+                    angle: player.angle,
+                    mode: activeMode.id
+                });
+                if (ghostHistory.length > 180) {
+                    ghostHistory.shift();
+                }
+            } else if (ghostHistory.length) {
+                ghostHistory = [];
+            }
+
+            const playerHitbox = getPlayerHitbox();
+            for (const obstacle of obstacles) {
+                const noClip = launcherMode === "hack" && hacks.noclip;
+                if (!noClip && intersects(playerHitbox, obstacle)) {
+                    if (activePracticeMode && restoreCheckpoint()) {
+                        updateScore();
+                        break;
+                    }
+
+                    gameOver = true;
+                    running = false;
+                    addCrashParticles();
+
+                    const currentScore = Math.floor(score);
+                    if (currentScore > best) {
+                        best = currentScore;
+                        saveBest(best);
+                    }
+                    commitBestPercent();
+                    updateScore();
+                    showOverlay("Game Over", `Level ${activeLevel.id} score: ${currentScore}. Press Start Game to retry.`);
+                    if (launcherMode === "geode" && geodeMods.autoRetry) {
+                        setTimeout(() => {
+                            if (!running) {
+                                safeStartGame();
+                            }
+                        }, 380);
+                    }
+                    break;
+                }
+            }
+
+            if (launcherMode === "hack" && hacks.autoComplete) {
+                score = Math.max(score, activeLevel.target);
+            }
+
+            if (Math.floor(score) >= activeLevel.target) {
+                running = false;
+                gameOver = true;
+                commitBestPercent();
+                if (activeLevel.id === CUSTOM_LEVEL_ID) {
+                    showOverlay("Custom Level Complete", `You cleared your custom level with ${activeBuild.name}!`);
+                    updateScore();
+                    return;
+                }
+                const nextLevel = Math.min(levels.length, activeLevel.id + 1);
+                if (nextLevel > unlockedLevel) {
+                    unlockedLevel = nextLevel;
+                    saveUnlockedLevel(unlockedLevel);
+                }
+                updateSelectors();
+                showOverlay(
+                    "Level Complete",
+                    activeLevel.id === levels.length
+                        ? `You cleared the final level with ${activeBuild.name}! Keep pushing your best score.`
+                        : `You beat Level ${activeLevel.id}! Level ${nextLevel} is now unlocked.`
+                );
+            }
+
+            updateScore();
+            if (cameraPulse > 0) {
+                cameraPulse = Math.max(0, cameraPulse - 0.08);
+            }
+            justPressed = false;
+        }
+
+        function drawDashOrbs() {
+            if (!activeTwoTwo || !dashOrbs.length) {
+                return;
+            }
+
+            for (const orb of dashOrbs) {
+                ctx.save();
+                const glow = 0.55 + Math.sin((score + orb.x) * 0.06) * 0.25;
+                ctx.globalAlpha = Math.max(0.3, glow);
+                ctx.fillStyle = "#f7f58a";
+                ctx.beginPath();
+                ctx.arc(orb.x, orb.y, orb.r + 5, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.globalAlpha = 1;
+                ctx.fillStyle = "#ffd447";
+                ctx.beginPath();
+                ctx.arc(orb.x, orb.y, orb.r, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.strokeStyle = "#fff7bf";
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                ctx.restore();
+            }
+        }
+
+        function drawGeodeGhost() {
+            if (!(launcherMode === "geode" && geodeMods.globedDemo)) {
+                return;
+            }
+            if (ghostHistory.length < 45) {
+                return;
+            }
+
+            const ghost = ghostHistory[0];
+            ctx.save();
+            ctx.globalAlpha = 0.45;
+            ctx.translate(ghost.x + player.w / 2, ghost.y + player.h / 2);
+            ctx.rotate(ghost.angle || 0);
+
+            if (ghost.mode === "wave") {
+                const halfW = player.w / 2;
+                const halfH = player.h / 2;
+                ctx.fillStyle = "#ffd86b";
+                ctx.beginPath();
+                ctx.moveTo(0, -halfH);
+                ctx.lineTo(halfW - 4, halfH - 6);
+                ctx.lineTo(0, halfH);
+                ctx.lineTo(-halfW + 4, halfH - 6);
+                ctx.closePath();
+                ctx.fill();
+            } else {
+                ctx.fillStyle = "#ffca6d";
+                ctx.strokeStyle = "#6f3f00";
+                ctx.lineWidth = 2;
+                const half = player.w / 2;
+                ctx.fillRect(-half, -half, player.w, player.h);
+                ctx.strokeRect(-half, -half, player.w, player.h);
+            }
+
+            ctx.restore();
+        }
+
+        function drawGrid() {
+            ctx.save();
+            ctx.globalAlpha = 0.16;
+            ctx.strokeStyle = "#9ec7ff";
+            ctx.lineWidth = 1;
+            const step = 44;
+            for (let x = 0; x < canvas.width; x += step) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, groundY);
+                ctx.stroke();
+            }
+            for (let y = 0; y < groundY; y += step) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+            ctx.restore();
+        }
+
+        function drawGround() {
+            const palette = activeLevel ? activeLevel.palette : levels[0].palette;
+
+            const sky = ctx.createLinearGradient(0, 0, 0, groundY);
+            sky.addColorStop(0, palette.sky);
+            sky.addColorStop(0.68, palette.mid);
+            sky.addColorStop(1, palette.floor);
+            ctx.fillStyle = sky;
+            ctx.fillRect(0, 0, canvas.width, groundY);
+
+            // XSebikX background layers: beams, city silhouettes, and a subtle brand tag.
+            for (let i = 0; i < 8; i += 1) {
+                const beamX = ((i * 160) - ((score || 0) * 9 % 160) + canvas.width) % (canvas.width + 120) - 60;
+                const beam = ctx.createLinearGradient(beamX, 0, beamX + 70, groundY);
+                beam.addColorStop(0, "rgba(255, 255, 255, 0.0)");
+                beam.addColorStop(0.4, "rgba(160, 245, 255, 0.11)");
+                beam.addColorStop(1, "rgba(255, 255, 255, 0.0)");
+                ctx.fillStyle = beam;
+                ctx.fillRect(beamX, 0, 74, groundY);
+            }
+
+            ctx.save();
+            ctx.globalAlpha = 0.25;
+            ctx.fillStyle = "#071a30";
+            const skylineStep = 60;
+            for (let x = 0; x < canvas.width + skylineStep; x += skylineStep) {
+                const h = 28 + ((x * 13) % 56);
+                ctx.fillRect(x - ((score || 0) * 2 % skylineStep), groundY - h, 34, h);
+            }
+            ctx.restore();
+
+            ctx.save();
+            ctx.globalAlpha = 0.2;
+            ctx.fillStyle = "#bff4ff";
+            ctx.font = "700 28px Chakra Petch, sans-serif";
+            ctx.fillText("XSebikX", 16, 40);
+            ctx.restore();
+
+            ctx.fillStyle = "#0f2645";
+            ctx.fillRect(0, groundY, canvas.width, canvas.height - groundY);
+
+            ctx.fillStyle = palette.line;
+            ctx.fillRect(0, groundY - 4, canvas.width, 4);
+        }
+
+        function drawPlayer() {
+            ctx.save();
+            ctx.translate(player.x + player.w / 2, player.y + player.h / 2);
+            ctx.rotate(player.angle);
+
+            if (activeMode && activeMode.id === "wave") {
+                drawWaveIcon();
+            } else {
+                drawStandardIcon();
+            }
+
+            ctx.restore();
+        }
+
+        function drawStandardIcon() {
+            const icon = activeIcon || icons[0];
+            const half = player.w / 2;
+            const rainbow = launcherMode === "geode" && geodeMods.rainbowIcon;
+            const hue = Math.floor(((score || 0) * 45) % 360);
+
+            ctx.fillStyle = rainbow ? `hsl(${hue} 88% 66%)` : icon.primary;
+            ctx.strokeStyle = "#111111";
+            ctx.lineWidth = 3;
+            ctx.fillRect(-half, -half, player.w, player.h);
+            ctx.strokeRect(-half, -half, player.w, player.h);
+
+            ctx.fillStyle = rainbow ? `hsl(${(hue + 35) % 360} 96% 86%)` : icon.accent;
+            if (icon.detail === "chevron") {
+                ctx.beginPath();
+                ctx.moveTo(-half + 8, -2);
+                ctx.lineTo(0, half - 8);
+                ctx.lineTo(half - 8, -2);
+                ctx.lineTo(half - 12, -8);
+                ctx.lineTo(0, half - 16);
+                ctx.lineTo(-half + 12, -8);
+                ctx.closePath();
+                ctx.fill();
+            } else if (icon.detail === "split") {
+                ctx.beginPath();
+                ctx.moveTo(0, -half + 8);
+                ctx.lineTo(half - 10, -2);
+                ctx.lineTo(0, half - 10);
+                ctx.lineTo(-half + 10, -2);
+                ctx.closePath();
+                ctx.fill();
+            } else if (icon.detail === "core") {
+                ctx.beginPath();
+                ctx.arc(0, 0, 8, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (icon.detail === "fang") {
+                ctx.beginPath();
+                ctx.moveTo(-half + 8, -half + 14);
+                ctx.lineTo(-2, half - 8);
+                ctx.lineTo(2, half - 8);
+                ctx.lineTo(half - 8, -half + 14);
+                ctx.lineTo(half - 14, -half + 18);
+                ctx.lineTo(0, half - 14);
+                ctx.lineTo(-half + 14, -half + 18);
+                ctx.closePath();
+                ctx.fill();
+            } else if (icon.detail === "glyph") {
+                ctx.fillRect(-4, -half + 8, 8, player.h - 16);
+                ctx.fillRect(-half + 8, -4, player.w - 16, 8);
+            } else if (icon.detail === "ring") {
+                ctx.beginPath();
+                ctx.arc(0, 0, 10, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = icon.primary;
+                ctx.beginPath();
+                ctx.arc(0, 0, 4, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (icon.detail === "spire") {
+                ctx.beginPath();
+                ctx.moveTo(0, -half + 6);
+                ctx.lineTo(half - 10, half - 8);
+                ctx.lineTo(-half + 10, half - 8);
+                ctx.closePath();
+                ctx.fill();
+            } else if (icon.detail === "star") {
+                ctx.beginPath();
+                ctx.moveTo(0, -half + 7);
+                ctx.lineTo(5, -2);
+                ctx.lineTo(half - 7, -2);
+                ctx.lineTo(8, 5);
+                ctx.lineTo(12, half - 7);
+                ctx.lineTo(0, 10);
+                ctx.lineTo(-12, half - 7);
+                ctx.lineTo(-8, 5);
+                ctx.lineTo(-half + 7, -2);
+                ctx.lineTo(-5, -2);
+                ctx.closePath();
+                ctx.fill();
+            }
+        }
+
+        function drawWaveIcon() {
+            const icon = activeIcon || icons[0];
+            const halfW = player.w / 2;
+            const halfH = player.h / 2;
+
+            ctx.fillStyle = icon.primary;
+            ctx.strokeStyle = "#111111";
+            ctx.lineWidth = 3;
+
+            ctx.beginPath();
+            ctx.moveTo(0, -halfH);
+            ctx.lineTo(halfW - 4, halfH - 6);
+            ctx.lineTo(0, halfH);
+            ctx.lineTo(-halfW + 4, halfH - 6);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = icon.accent;
+            ctx.beginPath();
+            ctx.moveTo(0, -halfH + 8);
+            ctx.lineTo(halfW - 12, halfH - 10);
+            ctx.lineTo(0, halfH - 6);
+            ctx.lineTo(-halfW + 12, halfH - 10);
+            ctx.closePath();
+            ctx.fill();
+
+            if (icon.detail === "core" || icon.detail === "ring") {
+                ctx.fillStyle = "#111111";
+                ctx.beginPath();
+                ctx.arc(0, halfH - 12, 6, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (icon.detail === "split") {
+                ctx.fillStyle = "#111111";
+                ctx.beginPath();
+                ctx.moveTo(-4, -2);
+                ctx.lineTo(0, 8);
+                ctx.lineTo(4, -2);
+                ctx.closePath();
+                ctx.fill();
+            } else if (icon.detail === "star") {
+                ctx.fillStyle = "#111111";
+                ctx.fillRect(-2, -6, 4, 14);
+                ctx.fillRect(-8, -1, 16, 4);
+            }
+        }
+
+        function drawWaveTrail() {
+            if (!waveTrail || !waveTrail.length) {
+                return;
+            }
+
+            const icon = activeIcon || icons[0];
+            ctx.save();
+            for (let i = 0; i < waveTrail.length; i += 1) {
+                const node = waveTrail[i];
+                const alpha = node.life / 26;
+                const size = 2 + alpha * 5;
+                ctx.globalAlpha = alpha * 0.7;
+                ctx.fillStyle = icon.accent;
+                ctx.fillRect(node.x - size / 2, node.y - size / 2, size, size);
+            }
+            ctx.restore();
+        }
+
+        function drawObstacle(obstacle) {
+            if (obstacle.type === "block") {
+                ctx.save();
+                const style = normalizeBlockStyle(obstacle.blockStyle);
+                const grad = ctx.createLinearGradient(obstacle.x, obstacle.y, obstacle.x, obstacle.y + obstacle.h);
+                let stroke = "#cfeaff";
+
+                if (style === "stone") {
+                    grad.addColorStop(0, "#a4abb8");
+                    grad.addColorStop(1, "#6e7483");
+                    stroke = "#d7dce6";
+                } else if (style === "neon") {
+                    grad.addColorStop(0, "#1ffff2");
+                    grad.addColorStop(1, "#0b6cff");
+                    stroke = "#d7fffb";
+                } else if (style === "glow") {
+                    grad.addColorStop(0, "#ffe77e");
+                    grad.addColorStop(1, "#ff9c42");
+                    stroke = "#fff8d8";
+                } else if (style === "brick") {
+                    grad.addColorStop(0, "#d36f54");
+                    grad.addColorStop(1, "#9a3f33");
+                    stroke = "#f5d0c2";
+                } else if (style === "metal") {
+                    grad.addColorStop(0, "#d4dee8");
+                    grad.addColorStop(1, "#7f8ea1");
+                    stroke = "#f2f8ff";
+                } else if (style === "checker") {
+                    grad.addColorStop(0, "#9cb0ff");
+                    grad.addColorStop(1, "#4c63c9");
+                    stroke = "#d9e1ff";
+                } else if (style === "crystal") {
+                    grad.addColorStop(0, "#c9a8ff");
+                    grad.addColorStop(1, "#7f5ec4");
+                    stroke = "#efe5ff";
+                } else if (style === "tech") {
+                    grad.addColorStop(0, "#76f0a9");
+                    grad.addColorStop(1, "#228a66");
+                    stroke = "#d8ffef";
+                } else if (style === "wood") {
+                    grad.addColorStop(0, "#c79352");
+                    grad.addColorStop(1, "#7f4f2b");
+                    stroke = "#f7e2c7";
+                } else if (style === "lava") {
+                    grad.addColorStop(0, "#ff8f4d");
+                    grad.addColorStop(1, "#bf2d1f");
+                    stroke = "#ffd8bf";
+                } else if (style === "ice") {
+                    grad.addColorStop(0, "#c6f2ff");
+                    grad.addColorStop(1, "#78b4d4");
+                    stroke = "#f1fbff";
+                } else {
+                    grad.addColorStop(0, "#6ec0ff");
+                    grad.addColorStop(1, "#2c67b8");
+                }
+
+                ctx.fillRect(obstacle.x, obstacle.y, obstacle.w, obstacle.h);
+                ctx.strokeStyle = stroke;
+                ctx.lineWidth = 2;
+                ctx.strokeRect(obstacle.x + 1, obstacle.y + 1, obstacle.w - 2, obstacle.h - 2);
+
+                if (style === "brick") {
+                    ctx.strokeStyle = "rgba(255, 230, 210, 0.45)";
+                    ctx.lineWidth = 1;
+                    const rowH = 8;
+                    for (let y = obstacle.y + rowH; y < obstacle.y + obstacle.h; y += rowH) {
+                        ctx.beginPath();
+                        ctx.moveTo(obstacle.x, y);
+                        ctx.lineTo(obstacle.x + obstacle.w, y);
+                        ctx.stroke();
+                    }
+                } else if (style === "checker") {
+                    ctx.fillStyle = "rgba(255, 255, 255, 0.16)";
+                    const cell = 8;
+                    for (let yy = 0; yy < obstacle.h; yy += cell) {
+                        for (let xx = 0; xx < obstacle.w; xx += cell) {
+                            if (((xx + yy) / cell) % 2 === 0) {
+                                ctx.fillRect(obstacle.x + xx, obstacle.y + yy, cell, cell);
+                            }
+                        }
+                    }
+                } else if (style === "tech") {
+                    ctx.strokeStyle = "rgba(7, 43, 29, 0.5)";
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(obstacle.x + 4, obstacle.y + 4, obstacle.w - 8, obstacle.h - 8);
+                    ctx.beginPath();
+                    ctx.moveTo(obstacle.x + obstacle.w / 2, obstacle.y + 2);
+                    ctx.lineTo(obstacle.x + obstacle.w / 2, obstacle.y + obstacle.h - 2);
+                    ctx.stroke();
+                } else if (style === "wood") {
+                    ctx.strokeStyle = "rgba(72, 39, 14, 0.4)";
+                    ctx.lineWidth = 1;
+                    for (let y = obstacle.y + 6; y < obstacle.y + obstacle.h; y += 6) {
+                        ctx.beginPath();
+                        ctx.moveTo(obstacle.x + 2, y);
+                        ctx.lineTo(obstacle.x + obstacle.w - 2, y + Math.sin(y) * 1.5);
+                        ctx.stroke();
+                    }
+                } else if (style === "lava") {
+                    ctx.fillStyle = "rgba(255, 240, 120, 0.25)";
+                    ctx.fillRect(obstacle.x + 3, obstacle.y + 3, obstacle.w - 6, Math.max(3, obstacle.h * 0.28));
+                } else if (style === "ice") {
+                    ctx.strokeStyle = "rgba(245, 255, 255, 0.5)";
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(obstacle.x + 3, obstacle.y + obstacle.h - 3);
+                    ctx.lineTo(obstacle.x + obstacle.w - 3, obstacle.y + 3);
+                    ctx.stroke();
+                }
+
+                if (style === "glow" || style === "neon" || style === "crystal") {
+                    ctx.globalAlpha = 0.22;
+                    ctx.fillStyle = stroke;
+                    ctx.fillRect(obstacle.x - 2, obstacle.y - 2, obstacle.w + 4, obstacle.h + 4);
+                }
+                ctx.restore();
+                return;
+            }
+
+            ctx.save();
+            ctx.fillStyle = "#ff4969";
+            ctx.beginPath();
+            ctx.moveTo(obstacle.x, obstacle.y + obstacle.h);
+            ctx.lineTo(obstacle.x + obstacle.w / 2, obstacle.y);
+            ctx.lineTo(obstacle.x + obstacle.w, obstacle.y + obstacle.h);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.fillStyle = "#ff9bb0";
+            ctx.fillRect(obstacle.x + obstacle.w / 2 - 2, obstacle.y + 8, 4, obstacle.h - 10);
+            ctx.restore();
+        }
+
+        function drawHitboxes() {
+            const showHackHitboxes = launcherMode === "hack" && hacks.showHitboxes;
+            const showGeodeHitboxes = launcherMode === "geode" && geodeMods.showHitboxes;
+            if (!(showHackHitboxes || showGeodeHitboxes)) {
+                return;
+            }
+
+            ctx.save();
+            ctx.lineWidth = 2;
+
+            const hitbox = getPlayerHitbox();
+            ctx.strokeStyle = "#39f3ff";
+            ctx.strokeRect(hitbox.x, hitbox.y, hitbox.w, hitbox.h);
+
+            ctx.strokeStyle = "#ff8ca2";
+            for (const obstacle of obstacles) {
+                ctx.strokeRect(obstacle.x, obstacle.y, obstacle.w, obstacle.h);
+            }
+
+            ctx.restore();
+        }
+
+        function drawParticles() {
+            if (!particles.length) {
+                return;
+            }
+
+            particles.forEach((p) => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.2;
+                p.life -= 1;
+
+                ctx.fillStyle = p.life > 20 ? "#00ffd0" : "#ff4969";
+                ctx.fillRect(p.x, p.y, 4, 4);
+            });
+
+            particles = particles.filter((p) => p.life > 0);
+        }
+
+        function draw() {
+            if (builderMode) {
+                drawBuilderScene();
+                return;
+            }
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.save();
+
+            if (activeTwoTwo && cameraPulse > 0) {
+                const scale = 1 + cameraPulse * 0.045;
+                ctx.translate(canvas.width / 2, canvas.height / 2);
+                ctx.scale(scale, scale);
+                ctx.translate(-canvas.width / 2, -canvas.height / 2);
+            }
+
+            drawGrid();
+            drawGround();
+            drawWaveTrail();
+            drawDashOrbs();
+            drawGeodeGhost();
+            drawPlayer();
+            obstacles.forEach(drawObstacle);
+            drawHitboxes();
+            drawParticles();
+            ctx.restore();
+        }
+
+        function loop() {
+            update();
+            draw();
+            requestAnimationFrame(loop);
+        }
+
+        playBtn.addEventListener("click", () => {
+            safeStartGame();
+        });
+
+        normalVersionBtn.addEventListener("click", () => {
+            applyLauncherMode("normal");
+        });
+
+        hackVersionBtn.addEventListener("click", () => {
+            applyLauncherMode("hack");
+        });
+
+        geodeVersionBtn.addEventListener("click", () => {
+            applyLauncherMode("geode");
+        });
+
+        overlay.addEventListener("pointerdown", (event) => {
+            if (event.target === overlay) {
+                safeStartGame();
+            }
+        });
+
+        jumpBtn.addEventListener("click", () => {
+            handleInputPress();
+            handleInputRelease();
+        });
+
+        window.addEventListener("keydown", (event) => {
+            if (builderMode) {
+                if (event.code === "Escape") {
+                    event.preventDefault();
+                    setBuilderMode(false);
+                    return;
+                }
+                if (event.code === "KeyT") {
+                    event.preventDefault();
+                    toggleBuilderTool();
+                    return;
+                }
+                if (event.code === "KeyB") {
+                    event.preventDefault();
+                    cycleBuilderBlockStyle(1);
+                    return;
+                }
+                if (event.code === "KeyA") {
+                    event.preventDefault();
+                    panBuilder(-140);
+                    return;
+                }
+                if (event.code === "KeyD") {
+                    event.preventDefault();
+                    panBuilder(140);
+                    return;
+                }
+                if (event.code === "KeyS") {
+                    event.preventDefault();
+                    saveCustomLevelObstacles();
+                    updateSelectors();
+                    return;
+                }
+                if (event.code === "KeyC") {
+                    event.preventDefault();
+                    customLevelObstacles = [];
+                    saveCustomLevelObstacles();
+                    updateSelectors();
+                    return;
+                }
+
+                // Block gameplay/hack controls while editing.
+                return;
+            }
+
+            if (event.code === "Tab") {
+                event.preventDefault();
+                if (launcherMode === "hack") {
+                    hackPanelOpen = !hackPanelOpen;
+                    updateHackPanelVisibility();
+                }
+                return;
+            }
+
+            if (event.code === "KeyG") {
+                if (launcherMode === "geode") {
+                    geodePanelOpen = !geodePanelOpen;
+                    updateGeodePanelVisibility();
+                    event.preventDefault();
+                }
+                return;
+            }
+
+            if (event.code === "KeyZ") {
+                if (running && activePracticeMode) {
+                    saveCheckpoint();
+                    lastAutoCheckpointScore = score;
+                }
+                return;
+            }
+
+            if (event.code === "KeyX") {
+                if (running && activePracticeMode) {
+                    checkpointState = null;
+                }
+                return;
+            }
+
+            if (event.code === "Space" || event.code === "ArrowUp" || event.code === "KeyW") {
+                event.preventDefault();
+                if (!keyHeld) {
+                    keyHeld = true;
+                    handleInputPress();
+                }
+            }
+        });
+
+        window.addEventListener("keyup", (event) => {
+            if (event.code === "Space" || event.code === "ArrowUp" || event.code === "KeyW") {
+                keyHeld = false;
+                handleInputRelease();
+            }
+        });
+
+        canvas.addEventListener("pointerdown", () => {
+            if (builderMode) {
+                return;
+            }
+            if (!pointerHeld) {
+                pointerHeld = true;
+                handleInputPress();
+            }
+        });
+
+        canvas.addEventListener("click", (event) => {
+            if (!builderMode) {
+                return;
+            }
+            handleBuilderPointer(event);
+        });
+
+        canvas.addEventListener("pointerup", () => {
+            pointerHeld = false;
+            handleInputRelease();
+        });
+
+        canvas.addEventListener("pointerleave", () => {
+            pointerHeld = false;
+            handleInputRelease();
+        });
+
+        levelSelect.addEventListener("change", () => {
+            selectedLevel = levelSelect.value === "custom" ? CUSTOM_LEVEL_ID : Number(levelSelect.value);
+            updateSelectors();
+            if (!running) {
+                resetGame();
+            }
+        });
+
+        buildSelect.addEventListener("change", () => {
+            selectedBuild = buildSelect.value;
+            updateSelectors();
+            if (!running) {
+                resetGame();
+            }
+        });
+
+        modeSelect.addEventListener("change", () => {
+            selectedMode = modeSelect.value;
+            updateSelectors();
+            if (!running) {
+                resetGame();
+            }
+        });
+
+        iconSelect.addEventListener("change", () => {
+            selectedIcon = iconSelect.value;
+            saveIcon(selectedIcon);
+            updateSelectors();
+            if (!running) {
+                resetGame();
+            }
+        });
+
+        songSelect.addEventListener("change", () => {
+            selectedSongChoice = songSelect.value;
+            saveSongChoice(selectedSongChoice);
+            updateSelectors();
+            if (running && activeLevel && !muted) {
+                startSong(activeLevel);
+            }
+        });
+
+        practiceSelect.addEventListener("change", () => {
+            selectedPracticeMode = practiceSelect.value;
+            updateSelectors();
+            if (!running) {
+                resetGame();
+            }
+        });
+
+        featureSetSelect.addEventListener("change", () => {
+            selectedFeatureSet = featureSetSelect.value;
+            updateSelectors();
+            if (!running) {
+                resetGame();
+            }
+        });
+
+        builderToggleBtn.addEventListener("click", () => {
+            setBuilderMode(!builderMode);
+        });
+
+        builderToolBtn.addEventListener("click", () => {
+            toggleBuilderTool();
+        });
+
+        builderBlockStyleSelect.addEventListener("change", () => {
+            builderBlockStyle = normalizeBlockStyle(builderBlockStyleSelect.value);
+            updateSelectors();
+        });
+
+        builderSaveBtn.addEventListener("click", () => {
+            saveCustomLevelObstacles();
+            updateSelectors();
+        });
+
+        builderLeftBtn.addEventListener("click", () => {
+            panBuilder(-220);
+        });
+
+        builderRightBtn.addEventListener("click", () => {
+            panBuilder(220);
+        });
+
+        builderClearBtn.addEventListener("click", () => {
+            customLevelObstacles = [];
+            saveCustomLevelObstacles();
+            updateSelectors();
+        });
+
+        builderPlayBtn.addEventListener("click", () => {
+            selectedLevel = CUSTOM_LEVEL_ID;
+            setBuilderMode(false);
+            resetGame();
+            safeStartGame();
+        });
+
+        createAccountBtn.addEventListener("click", () => {
+            createAccount();
+        });
+
+        loginAccountBtn.addEventListener("click", () => {
+            loginAccount();
+        });
+
+        logoutAccountBtn.addEventListener("click", () => {
+            logoutAccount();
+        });
+
+        accountPassInput.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                loginAccount();
+            }
+        });
+
+        geodeSpeedBoost.addEventListener("change", () => {
+            geodeMods.speedBoost = geodeSpeedBoost.checked;
+        });
+
+        geodeLowGravity.addEventListener("change", () => {
+            geodeMods.lowGravity = geodeLowGravity.checked;
+        });
+
+        geodeHitboxes.addEventListener("change", () => {
+            geodeMods.showHitboxes = geodeHitboxes.checked;
+        });
+
+        geodeRainbow.addEventListener("change", () => {
+            geodeMods.rainbowIcon = geodeRainbow.checked;
+        });
+
+        geodeAutoRetry.addEventListener("change", () => {
+            geodeMods.autoRetry = geodeAutoRetry.checked;
+        });
+
+        geodeClickFrames.addEventListener("change", () => {
+            geodeMods.clickFrames = geodeClickFrames.checked;
+        });
+
+        geodeGlobed.addEventListener("change", () => {
+            geodeMods.globedDemo = geodeGlobed.checked;
+            if (!geodeMods.globedDemo) {
+                ghostHistory = [];
+            }
+        });
+
+        hackNoclip.addEventListener("change", () => {
+            hacks.noclip = hackNoclip.checked;
+        });
+
+        hackUnlock.addEventListener("change", () => {
+            hacks.unlockAllLevels = hackUnlock.checked;
+            updateSelectors();
+            if (!running) {
+                resetGame();
+            }
+        });
+
+        hackSpeedValue.addEventListener("input", () => {
+            hacks.speedMultiplier = Number(hackSpeedValue.value);
+            updateHackSpeedLabel();
+        });
+
+        hackNoLimitSpeed.addEventListener("change", () => {
+            hacks.noLimitSpeed = hackNoLimitSpeed.checked;
+            updateHackSpeedLabel();
+        });
+
+        hackNoLimitSpeedValue.addEventListener("input", () => {
+            const next = Number(hackNoLimitSpeedValue.value);
+            if (!Number.isFinite(next) || next <= 0) {
+                return;
+            }
+            hacks.noLimitSpeedValue = next;
+            updateHackSpeedLabel();
+        });
+
+        hackHitboxes.addEventListener("change", () => {
+            hacks.showHitboxes = hackHitboxes.checked;
+        });
+
+        hackAutoComplete.addEventListener("change", () => {
+            hacks.autoComplete = hackAutoComplete.checked;
+        });
+
+        hackJumpUfo.addEventListener("change", () => {
+            hacks.jumpUfo = hackJumpUfo.checked;
+            if (running) {
+                applyHackModeOverride();
+            }
+        });
+
+        hackModeSelect.addEventListener("change", () => {
+            hacks.forceGamemode = hackModeSelect.value;
+            if (running) {
+                applyHackModeOverride();
+            }
+        });
+
+        nextIconBtn.addEventListener("click", () => {
+            const currentIndex = icons.findIndex((icon) => icon.id === selectedIcon);
+            const nextIndex = currentIndex < 0 ? 0 : (currentIndex + 1) % icons.length;
+            selectedIcon = icons[nextIndex].id;
+            saveIcon(selectedIcon);
+            updateSelectors();
+            if (!running) {
+                resetGame();
+            }
+        });
+
+        muteBtn.addEventListener("click", () => {
+            muted = !muted;
+            if (muted) {
+                stopSong();
+            } else if (running && activeLevel) {
+                startSong(activeLevel);
+            }
+            updateMusicLabel();
+        });
+
+        clearAllSavedDataOnce();
+
+        accountsDb = loadAccountsDb();
+        currentAccountName = loadCurrentAccountName();
+        refreshAccountLabel();
+
+        best = loadBest();
+        bestPercentByLevel = loadBestPercentByLevel();
+        unlockedLevel = loadUnlockedLevel();
+        selectedLevel = 1;
+        selectedBuild = "balanced";
+        selectedMode = "cube";
+        selectedIcon = loadIcon();
+        selectedSongChoice = loadSongChoice();
+        selectedPracticeMode = "off";
+        selectedFeatureSet = "twoTwo";
+        customLevelObstacles = loadCustomLevelObstacles();
+        muted = false;
+        inputHeld = false;
+        justPressed = false;
+        pressStartedAt = 0;
+        keyHeld = false;
+        pointerHeld = false;
+        lastWaveTapAt = 0;
+        waveStraightUntil = 0;
+        waveTrail = [];
+        hacks = {
+            noclip: false,
+            unlockAllLevels: false,
+            speedMultiplier: 1,
+            noLimitSpeed: false,
+            noLimitSpeedValue: 5,
+            showHitboxes: false,
+            autoComplete: false,
+            jumpUfo: false,
+            forceGamemode: "off"
+        };
+        geodeMods = {
+            speedBoost: true,
+            lowGravity: false,
+            showHitboxes: false,
+            rainbowIcon: true,
+            autoRetry: false,
+            clickFrames: true,
+            globedDemo: false
+        };
+        dashOrbs = [];
+        cameraPulse = 0;
+        geodeClickBufferFrames = 0;
+        ghostHistory = [];
+        builderMode = false;
+        builderTool = "spike";
+        builderCameraX = 0;
+        builderBlockStyle = "classic";
+        hackPanelOpen = false;
+        geodePanelOpen = false;
+        syncHackInputs();
+        syncGeodeInputs();
+        running = false;
+        updateSelectors();
+        resetGame();
+        launcherMode = null;
+        updateLauncherNote();
+        updateGeodePanelVisibility();
+        overlay.classList.add("hidden");
+        loop();
+    </script>
+</body>
+</html>
