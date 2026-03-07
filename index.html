@@ -771,9 +771,81 @@
             font-weight: 700;
         }
 
+        .touch-jump-btn {
+            position: absolute;
+            right: 14px;
+            bottom: 14px;
+            z-index: 26;
+            width: 84px;
+            height: 84px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            background: radial-gradient(circle at 30% 28%, rgba(172, 224, 255, 0.95), rgba(64, 131, 240, 0.92));
+            color: #ffffff;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            box-shadow:
+                inset 0 2px 0 rgba(255, 255, 255, 0.35),
+                0 8px 16px rgba(0, 0, 0, 0.35);
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .touch-jump-btn.hidden {
+            display: none;
+        }
+
+        .touch-jump-btn:active {
+            transform: scale(0.96);
+        }
+
+        @media (pointer: fine) {
+            .touch-jump-btn {
+                display: none;
+            }
+        }
+
+        @media (max-width: 860px) {
+            .top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .score {
+                width: 100%;
+                font-size: 0.86rem;
+                gap: 6px 10px;
+                justify-content: flex-start;
+            }
+        }
+
         @media (max-width: 620px) {
             body {
                 padding: 8px;
+            }
+
+            .top {
+                padding: 10px;
+            }
+
+            .title {
+                font-size: 0.95rem;
+            }
+
+            .score {
+                font-size: 0.8rem;
+                line-height: 1.25;
+            }
+
+            .touch-jump-btn {
+                width: 76px;
+                height: 76px;
+                right: 10px;
+                bottom: 10px;
+                font-size: 0.82rem;
             }
 
             .launcher-actions {
@@ -827,6 +899,7 @@
 
         <section class="stage">
             <canvas id="game" width="900" height="360" aria-label="Geometry Dash Free Game"></canvas>
+            <button id="touchJumpBtn" class="touch-jump-btn hidden" type="button" aria-label="Jump">Jump</button>
 
             <div id="practiceTab" class="practice-tab hidden" aria-label="Practice controls">
                 <div class="practice-key">
@@ -1167,6 +1240,7 @@
         const accountInfo = document.getElementById("accountInfo");
         const playBtn = document.getElementById("playBtn");
         const jumpBtn = document.getElementById("jumpBtn");
+        const touchJumpBtn = document.getElementById("touchJumpBtn");
 
         const BEST_KEY = "geometry-dash-free-best";
         const BEST_PERCENT_KEY = "geometry-dash-free-best-percent";
@@ -2133,6 +2207,12 @@
             practiceTab.classList.toggle("hidden", !show);
         }
 
+        function updateTouchJumpButtonVisibility() {
+            const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
+            const show = isTouchDevice && running && !builderMode && overlay.classList.contains("hidden");
+            touchJumpBtn.classList.toggle("hidden", !show);
+        }
+
         function applyHackModeDefaults() {
             if (launcherMode === "hack") {
                 hacks.noclip = true;
@@ -2575,6 +2655,7 @@
                 showOverlay("Main Menu", "Builder closed. Choose settings, then launch the run.");
             }
             updateSelectors();
+            updateTouchJumpButtonVisibility();
         }
 
         function toggleBuilderTool() {
@@ -2702,6 +2783,7 @@
             running = true;
             overlay.classList.add("hidden");
             updatePracticeTabVisibility();
+            updateTouchJumpButtonVisibility();
             try {
                 startSong(activeLevel);
             } catch (error) {
@@ -2728,6 +2810,7 @@
             overlayText.textContent = text;
             overlay.classList.remove("hidden");
             updatePracticeTabVisibility();
+            updateTouchJumpButtonVisibility();
             stopSong();
         }
 
@@ -2748,6 +2831,7 @@
             modeLabel.textContent = `Mode: ${activeMode ? activeMode.name : getModeById(selectedMode).name}`;
             iconLabel.textContent = `Icon: ${activeIcon ? activeIcon.name : getIconById(selectedIcon).name}`;
             updatePracticeTabVisibility();
+            updateTouchJumpButtonVisibility();
         }
 
         function saveCheckpoint() {
@@ -3870,6 +3954,25 @@
             handleInputRelease();
         });
 
+        touchJumpBtn.addEventListener("pointerdown", (event) => {
+            event.preventDefault();
+            handleInputPress();
+        });
+
+        touchJumpBtn.addEventListener("pointerup", (event) => {
+            event.preventDefault();
+            handleInputRelease();
+        });
+
+        touchJumpBtn.addEventListener("pointercancel", (event) => {
+            event.preventDefault();
+            handleInputRelease();
+        });
+
+        touchJumpBtn.addEventListener("pointerleave", () => {
+            handleInputRelease();
+        });
+
         window.addEventListener("keydown", (event) => {
             if (builderMode) {
                 if (event.code === "Escape") {
@@ -3997,6 +4100,10 @@
             keyHeld = false;
             pointerHeld = false;
             handleInputRelease();
+        });
+
+        window.addEventListener("resize", () => {
+            updateTouchJumpButtonVisibility();
         });
 
         levelSelect.addEventListener("change", () => {
@@ -4283,6 +4390,7 @@
         launcherMode = null;
         updateLauncherNote();
         updateGeodePanelVisibility();
+        updateTouchJumpButtonVisibility();
         overlay.classList.add("hidden");
         loop();
     </script>
