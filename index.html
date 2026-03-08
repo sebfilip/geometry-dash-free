@@ -80,6 +80,54 @@
             justify-content: flex-end;
         }
 
+        .account-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 3px 8px 3px 3px;
+            border-radius: 999px;
+            background: rgba(6, 20, 40, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .profile-circle {
+            position: relative;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: 3px solid #ffffff;
+            box-shadow: 0 0 0 2px #111111;
+            background: linear-gradient(180deg, #96ec29 0%, #7ee01f 48%, #61bd11 49%, #5cb611 100%);
+            flex: 0 0 auto;
+            overflow: hidden;
+        }
+
+        .profile-circle::before {
+            content: "";
+            position: absolute;
+            width: 13px;
+            height: 15px;
+            left: 50%;
+            top: 6px;
+            transform: translateX(-50%);
+            border-radius: 50%;
+            background: #f0f2f6;
+            box-shadow: 0 0 0 2px #111111;
+        }
+
+        .profile-circle::after {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 12px;
+            left: 50%;
+            bottom: 5px;
+            transform: translateX(-50%);
+            border-radius: 12px 12px 7px 7px;
+            background: #e9ebef;
+            box-shadow: 0 0 0 2px #111111;
+        }
+
         .stage {
             position: relative;
             overflow: auto;
@@ -223,6 +271,11 @@
             border-radius: 14px;
         }
 
+        #geodeVersionBtn .gd-icon {
+            width: 36px;
+            height: 36px;
+        }
+
         .gd-icon-cube::before {
             content: "";
             position: absolute;
@@ -258,7 +311,7 @@
         .gd-icon-tools::before {
             content: "";
             position: absolute;
-            inset: 4px;
+            inset: 5px;
             border-radius: 50%;
             background: radial-gradient(circle at 30% 26%, #2f2f35, #17181f 68%);
         }
@@ -268,11 +321,11 @@
             position: absolute;
             left: 50%;
             top: 50%;
-            width: 62%;
-            height: 62%;
+            width: 52%;
+            height: 52%;
             transform: translate(-50%, -50%) rotate(-18deg);
             clip-path: polygon(50% 0%, 95% 38%, 77% 100%, 23% 100%, 5% 38%);
-            border: 3px solid #f8fbff;
+            border: 2px solid #f8fbff;
             border-radius: 2px;
             filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.5));
         }
@@ -628,6 +681,10 @@
             padding: 10px;
         }
 
+        .menu-card.hidden {
+            display: none;
+        }
+
         .menu-card label {
             display: grid;
             gap: 6px;
@@ -649,6 +706,56 @@
             min-height: 210px;
             max-height: 280px;
             overflow-y: auto;
+        }
+
+        .level-search-input {
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 8px;
+            padding: 7px 8px;
+            font: inherit;
+            background: rgba(12, 27, 49, 0.88);
+            color: #ffffff;
+            margin-bottom: 6px;
+        }
+
+        .level-jump-row {
+            margin-top: 6px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 6px;
+        }
+
+        .level-rate-row {
+            margin-top: 8px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .level-rate-row select {
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 7px 8px;
+            font: inherit;
+            background: rgba(8, 21, 40, 0.76);
+            color: #ffffff;
+        }
+
+        .level-jump-row input {
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 8px;
+            padding: 7px 8px;
+            font: inherit;
+            background: rgba(12, 27, 49, 0.88);
+            color: #ffffff;
+        }
+
+        .level-jump-row button {
+            padding: 7px 10px;
+            font-size: 0.82rem;
         }
 
         .menu-card small {
@@ -688,6 +795,35 @@
             color: #ffffff;
         }
 
+        .saved-level-select {
+            margin-top: 8px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 8px;
+            padding: 7px 8px;
+            font: inherit;
+            background: rgba(12, 27, 49, 0.88);
+            color: #ffffff;
+        }
+
+        .saved-level-input {
+            margin-top: 8px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 8px;
+            padding: 7px 8px;
+            font: inherit;
+            background: rgba(12, 27, 49, 0.88);
+            color: #ffffff;
+        }
+
+        .saved-level-actions {
+            margin-top: 8px;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(90px, 1fr));
+            gap: 8px;
+        }
+
         .builder-btn {
             padding: 7px 8px;
             font-size: 0.8rem;
@@ -720,6 +856,58 @@
             gap: 8px;
         }
 
+        .editor-grid {
+            display: grid;
+            gap: 8px;
+        }
+
+        .editor-row {
+            display: grid;
+            gap: 5px;
+            font-size: 0.8rem;
+            color: #d3e7ff;
+        }
+
+        .editor-row input[type="range"],
+        .editor-row input[type="color"],
+        .editor-row select {
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 6px 8px;
+            font: inherit;
+            background: rgba(8, 21, 40, 0.76);
+            color: #ffffff;
+        }
+
+        .editor-row input[type="color"] {
+            padding: 2px;
+            min-height: 34px;
+            cursor: pointer;
+        }
+
+        .editor-values {
+            color: #9fc8ff;
+            font-size: 0.76rem;
+            line-height: 1.3;
+        }
+
+        .owner-actions {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(90px, 1fr));
+            gap: 8px;
+        }
+
+        .owner-name-input {
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 8px;
+            padding: 7px 8px;
+            font: inherit;
+            background: rgba(12, 27, 49, 0.88);
+            color: #ffffff;
+            width: 100%;
+        }
+
         button {
             border: 0;
             border-radius: 10px;
@@ -744,6 +932,11 @@
             color: #ffffff;
         }
 
+        .more-btn {
+            background: linear-gradient(120deg, #d9e4ff, #9cb5ff);
+            color: #12204a;
+        }
+
         .music-btn {
             background: linear-gradient(120deg, #ffd76f, #f3a043);
             color: #2f2100;
@@ -754,6 +947,20 @@
             background: linear-gradient(120deg, #b8c6ff, #7f95f1);
             color: #111a3a;
             padding: 7px 12px;
+        }
+
+        .save-btn {
+            background: linear-gradient(120deg, #9fffc4, #38c777);
+            color: #07301d;
+            padding: 7px 12px;
+        }
+
+        .save-status {
+            color: #9decc0;
+            font-size: 0.82rem;
+            font-weight: 700;
+            min-width: 92px;
+            text-align: right;
         }
 
         .bottom {
@@ -795,6 +1002,31 @@
         }
 
         .touch-jump-btn.hidden {
+            display: none;
+        }
+
+        .geode-toggle-btn {
+            position: absolute;
+            left: 12px;
+            bottom: 14px;
+            z-index: 26;
+            min-width: 86px;
+            height: 42px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.65);
+            background: linear-gradient(145deg, #ffcd7f, #ef8729);
+            color: #2d1300;
+            font-size: 0.75rem;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            font-weight: 700;
+            box-shadow:
+                inset 0 2px 0 rgba(255, 255, 255, 0.35),
+                0 8px 14px rgba(0, 0, 0, 0.34);
+            touch-action: manipulation;
+        }
+
+        .geode-toggle-btn.hidden {
             display: none;
         }
 
@@ -893,13 +1125,14 @@
                 <span id="buildLabel">Build: Balanced</span>
                 <span id="modeLabel">Mode: Cube</span>
                 <span id="iconLabel">Icon: Dart</span>
-                <span id="accountLabel">Account: Guest</span>
+                <span class="account-chip"><span class="profile-circle" aria-hidden="true"></span><span id="accountLabel">Account: Guest</span></span>
             </div>
         </section>
 
         <section class="stage">
             <canvas id="game" width="900" height="360" aria-label="Geometry Dash Free Game"></canvas>
             <button id="touchJumpBtn" class="touch-jump-btn hidden" type="button" aria-label="Jump">Jump</button>
+            <button id="geodeToggleBtn" class="geode-toggle-btn hidden" type="button" aria-label="Geode mods">Geode Mods</button>
 
             <div id="practiceTab" class="practice-tab hidden" aria-label="Practice controls">
                 <div class="practice-key">
@@ -1034,6 +1267,18 @@
                         Globed Demo
                         <input id="geodeGlobed" type="checkbox">
                     </label>
+                    <label class="hack-item">
+                        Mini Icon
+                        <input id="geodeMiniIcon" type="checkbox">
+                    </label>
+                    <label class="hack-item">
+                        Time Warp
+                        <input id="geodeTimeWarp" type="checkbox">
+                    </label>
+                    <label class="hack-item">
+                        Shield (1 hit)
+                        <input id="geodeShield" type="checkbox">
+                    </label>
                 </div>
             </aside>
 
@@ -1048,7 +1293,23 @@
                         <div class="menu-card">
                             <label>
                                 Level
+                                <input id="levelSearchInput" class="level-search-input" type="text" maxlength="40" placeholder="Search level by name or number">
                                 <select id="levelSelect" class="level-scroll-select" size="8" aria-label="Choose level"></select>
+                                <div class="level-jump-row">
+                                    <input id="levelJumpInput" type="number" min="1" step="1" placeholder="Jump to level">
+                                    <button id="levelJumpBtn" class="builder-btn" type="button">Jump</button>
+                                </div>
+                                <div class="level-rate-row">
+                                    <select id="levelRateSelect" aria-label="Rate selected level">
+                                        <option value="5">Rate: 5 stars</option>
+                                        <option value="4">Rate: 4 stars</option>
+                                        <option value="3">Rate: 3 stars</option>
+                                        <option value="2">Rate: 2 stars</option>
+                                        <option value="1">Rate: 1 star</option>
+                                    </select>
+                                    <button id="rateLevelBtn" class="builder-btn" type="button">Rate</button>
+                                </div>
+                                <small id="levelRatingInfo" class="editor-values">Rating: not rated yet.</small>
                                 <small id="levelInfo">-</small>
                             </label>
                         </div>
@@ -1068,9 +1329,60 @@
                         </div>
                         <div class="menu-card">
                             <label>
-                                Icon
-                                <select id="iconSelect" aria-label="Choose icon"></select>
-                                <small id="iconInfo">-</small>
+                                Build Editor
+                                <div class="editor-grid">
+                                    <div class="editor-row">
+                                        Jump Force
+                                        <input id="buildJumpInput" type="range" min="-24" max="-8" step="0.2">
+                                    </div>
+                                    <div class="editor-row">
+                                        Gravity Scale
+                                        <input id="buildGravityInput" type="range" min="0.6" max="1.5" step="0.01">
+                                    </div>
+                                    <div class="editor-row">
+                                        Speed Scale
+                                        <input id="buildSpeedInput" type="range" min="0.6" max="1.6" step="0.01">
+                                    </div>
+                                    <div class="editor-row">
+                                        Size
+                                        <input id="buildSizeInput" type="range" min="28" max="64" step="1">
+                                    </div>
+                                    <small id="buildEditorInfo" class="editor-values">Custom build uses your edited stats.</small>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="menu-card">
+                            <label>
+                                Icon Editor
+                                <div class="editor-grid">
+                                    <div class="editor-row">
+                                        Icon Base
+                                        <select id="iconSelect" aria-label="Choose icon"></select>
+                                    </div>
+                                    <div class="editor-row">
+                                        Primary Color
+                                        <input id="iconPrimaryInput" type="color" value="#d4d7dc">
+                                    </div>
+                                    <div class="editor-row">
+                                        Accent Color
+                                        <input id="iconAccentInput" type="color" value="#ffffff">
+                                    </div>
+                                    <div class="editor-row">
+                                        Detail Shape
+                                        <select id="iconDetailInput" aria-label="Choose custom icon detail">
+                                            <option value="chevron">Chevron</option>
+                                            <option value="split">Split</option>
+                                            <option value="core">Core</option>
+                                            <option value="fang">Fang</option>
+                                            <option value="glyph">Glyph</option>
+                                            <option value="ring">Ring</option>
+                                            <option value="spire">Spire</option>
+                                            <option value="star">Star</option>
+                                        </select>
+                                    </div>
+                                    <small id="iconInfo" class="editor-values">-</small>
+                                    <small id="iconEditorInfo" class="editor-values">Custom icon updates live while editing.</small>
+                                </div>
                             </label>
                         </div>
                         <div class="menu-card">
@@ -1112,6 +1424,14 @@
                                     <button id="builderClearBtn" class="builder-btn" type="button">Clear</button>
                                     <button id="builderPlayBtn" class="builder-btn" type="button">Play Custom</button>
                                 </div>
+                                <input id="savedLevelNameInput" class="saved-level-input" type="text" maxlength="30" placeholder="Saved level name">
+                                <select id="savedLevelsSelect" class="saved-level-select" aria-label="Saved levels list"></select>
+                                <div class="saved-level-actions">
+                                    <button id="saveLevelBtn" class="builder-btn" type="button">Save Level</button>
+                                    <button id="loadSavedLevelBtn" class="builder-btn" type="button">Load Saved</button>
+                                    <button id="publishLevelBtn" class="builder-btn" type="button">Publish Level</button>
+                                    <button id="deleteSavedLevelBtn" class="builder-btn" type="button">Delete Saved</button>
+                                </div>
                                 <select id="builderBlockStyleSelect" class="builder-block-select" aria-label="Choose block style">
                                     <option value="classic">Block Style: Classic</option>
                                     <option value="stone">Block Style: Stone</option>
@@ -1144,10 +1464,24 @@
                                 <small id="accountInfo" class="builder-info">Create or login to an account saved on this browser.</small>
                             </label>
                         </div>
+                        <div id="ownerToolsCard" class="menu-card">
+                            <label>
+                                Owner Tools
+                                <div class="editor-grid">
+                                    <input id="ownerLevelNameInput" class="owner-name-input" type="text" maxlength="30" placeholder="Main level name (optional)">
+                                    <div class="owner-actions">
+                                        <button id="ownerPublishBtn" class="builder-btn" type="button">Make Main Level</button>
+                                        <button id="ownerDeleteBtn" class="builder-btn" type="button">Delete Last Main</button>
+                                    </div>
+                                    <small id="ownerInfo" class="editor-values">Owner tools are locked to one account.</small>
+                                </div>
+                            </label>
+                        </div>
                     </div>
                     <div class="actions">
                         <button id="playBtn" class="play-btn" type="button">Start Game</button>
                         <button id="jumpBtn" class="jump-btn" type="button">Jump (W/Space)</button>
+                        <button id="moreBtn" class="more-btn" type="button">More</button>
                     </div>
                     <div class="menu-note">Tip: W, Space, Arrow Up, or tap also starts instantly.</div>
                 </div>
@@ -1159,6 +1493,8 @@
             <span id="musicLabel">Song: -</span>
             <button id="nextIconBtn" class="icon-btn" type="button">Icon Setting: Next</button>
             <button id="muteBtn" class="music-btn" type="button">Mute: Off</button>
+            <button id="saveProgressBtn" class="save-btn" type="button">Save Progress</button>
+            <span id="saveStatusLabel" class="save-status">Save ready.</span>
             <span id="bestLabel" class="best">Best: 0</span>
         </section>
     </main>
@@ -1181,6 +1517,8 @@
         const musicLabel = document.getElementById("musicLabel");
         const nextIconBtn = document.getElementById("nextIconBtn");
         const muteBtn = document.getElementById("muteBtn");
+        const saveProgressBtn = document.getElementById("saveProgressBtn");
+        const saveStatusLabel = document.getElementById("saveStatusLabel");
         const launcher = document.getElementById("launcher");
         const normalVersionBtn = document.getElementById("normalVersionBtn");
         const hackVersionBtn = document.getElementById("hackVersionBtn");
@@ -1206,13 +1544,31 @@
         const geodeAutoRetry = document.getElementById("geodeAutoRetry");
         const geodeClickFrames = document.getElementById("geodeClickFrames");
         const geodeGlobed = document.getElementById("geodeGlobed");
+        const geodeMiniIcon = document.getElementById("geodeMiniIcon");
+        const geodeTimeWarp = document.getElementById("geodeTimeWarp");
+        const geodeShield = document.getElementById("geodeShield");
         const overlay = document.getElementById("overlay");
         const overlayTitle = document.getElementById("overlayTitle");
         const overlayText = document.getElementById("overlayText");
+        const levelSearchInput = document.getElementById("levelSearchInput");
         const levelSelect = document.getElementById("levelSelect");
+        const levelJumpInput = document.getElementById("levelJumpInput");
+        const levelJumpBtn = document.getElementById("levelJumpBtn");
+        const levelRateSelect = document.getElementById("levelRateSelect");
+        const rateLevelBtn = document.getElementById("rateLevelBtn");
+        const levelRatingInfo = document.getElementById("levelRatingInfo");
         const buildSelect = document.getElementById("buildSelect");
+        const buildJumpInput = document.getElementById("buildJumpInput");
+        const buildGravityInput = document.getElementById("buildGravityInput");
+        const buildSpeedInput = document.getElementById("buildSpeedInput");
+        const buildSizeInput = document.getElementById("buildSizeInput");
+        const buildEditorInfo = document.getElementById("buildEditorInfo");
         const modeSelect = document.getElementById("modeSelect");
         const iconSelect = document.getElementById("iconSelect");
+        const iconPrimaryInput = document.getElementById("iconPrimaryInput");
+        const iconAccentInput = document.getElementById("iconAccentInput");
+        const iconDetailInput = document.getElementById("iconDetailInput");
+        const iconEditorInfo = document.getElementById("iconEditorInfo");
         const songSelect = document.getElementById("songSelect");
         const practiceSelect = document.getElementById("practiceSelect");
         const featureSetSelect = document.getElementById("featureSetSelect");
@@ -1223,12 +1579,22 @@
         const builderRightBtn = document.getElementById("builderRightBtn");
         const builderClearBtn = document.getElementById("builderClearBtn");
         const builderPlayBtn = document.getElementById("builderPlayBtn");
+        const savedLevelNameInput = document.getElementById("savedLevelNameInput");
+        const savedLevelsSelect = document.getElementById("savedLevelsSelect");
+        const saveLevelBtn = document.getElementById("saveLevelBtn");
+        const loadSavedLevelBtn = document.getElementById("loadSavedLevelBtn");
+        const publishLevelBtn = document.getElementById("publishLevelBtn");
+        const deleteSavedLevelBtn = document.getElementById("deleteSavedLevelBtn");
         const builderBlockStyleSelect = document.getElementById("builderBlockStyleSelect");
         const accountNameInput = document.getElementById("accountNameInput");
         const accountPassInput = document.getElementById("accountPassInput");
         const createAccountBtn = document.getElementById("createAccountBtn");
         const loginAccountBtn = document.getElementById("loginAccountBtn");
         const logoutAccountBtn = document.getElementById("logoutAccountBtn");
+        const ownerToolsCard = document.getElementById("ownerToolsCard");
+        const ownerLevelNameInput = document.getElementById("ownerLevelNameInput");
+        const ownerPublishBtn = document.getElementById("ownerPublishBtn");
+        const ownerDeleteBtn = document.getElementById("ownerDeleteBtn");
         const levelInfo = document.getElementById("levelInfo");
         const buildInfo = document.getElementById("buildInfo");
         const modeInfo = document.getElementById("modeInfo");
@@ -1238,20 +1604,37 @@
         const featureSetInfo = document.getElementById("featureSetInfo");
         const builderInfo = document.getElementById("builderInfo");
         const accountInfo = document.getElementById("accountInfo");
+        const ownerInfo = document.getElementById("ownerInfo");
         const playBtn = document.getElementById("playBtn");
         const jumpBtn = document.getElementById("jumpBtn");
+        const moreBtn = document.getElementById("moreBtn");
         const touchJumpBtn = document.getElementById("touchJumpBtn");
+        const geodeToggleBtn = document.getElementById("geodeToggleBtn");
+        const menuGrid = overlay.querySelector(".menu-grid");
 
         const BEST_KEY = "geometry-dash-free-best";
         const BEST_PERCENT_KEY = "geometry-dash-free-best-percent";
         const UNLOCKED_LEVEL_KEY = "geometry-dash-free-unlocked-level";
         const ICON_KEY = "geometry-dash-free-icon";
+        const BUILD_KEY = "geometry-dash-free-build";
         const SONG_CHOICE_KEY = "geometry-dash-free-song-choice";
         const CUSTOM_LEVEL_KEY = "geometry-dash-free-custom-level";
+        const CUSTOM_BUILD_KEY = "geometry-dash-free-custom-build";
+        const CUSTOM_ICON_KEY = "geometry-dash-free-custom-icon";
+        const SAVED_LEVELS_KEY = "geometry-dash-free-saved-levels";
+        const LEVEL_RATINGS_KEY = "geometry-dash-free-level-ratings";
+        const OWNER_ACCOUNT_KEY = "geometry-dash-free-owner-account";
+        const OWNER_LEVELS_KEY = "geometry-dash-free-owner-main-levels";
+        const OWNER_ACCOUNT_NAMES = ["XSebikX"];
+        const LEVEL_RATER_ACCOUNT_NAMES = ["XSebikX", "XElinkaaX"];
         const ACCOUNT_DB_KEY = "geometry-dash-free-accounts";
         const CURRENT_ACCOUNT_KEY = "geometry-dash-free-current-account";
         const CLEAR_ONCE_KEY = "geometry-dash-free-cleared-once";
-        const CUSTOM_LEVEL_ID = 501;
+        const PROGRESS_SNAPSHOT_KEY = "geometry-dash-free-progress-snapshot-v1";
+        const TOTAL_LEVELS = 5000000;
+        const CUSTOM_LEVEL_ID = 5000001;
+        const PUBLISHED_LEVEL_BASE = 6000000;
+        const LEVEL_SELECT_WINDOW = 220;
 
         const BLOCK_STYLES = [
             "classic",
@@ -1614,7 +1997,7 @@
             }
         ];
 
-        // Expand campaign to 500 total levels with procedural scaling.
+        // Expand campaign to 5,000,000 total levels with procedural scaling (generated on demand).
         const generatedSongs = ["neon", "jumpTwo", "dashRun", "circuit", "pulse", "chaos", "final", "fracture"];
         const generatedSpawns = ["standard", "jump-two", "dash-train"];
         const generatedDifficulties = [
@@ -1626,7 +2009,7 @@
             "Impossible"
         ];
 
-        for (let id = 21; id <= 500; id += 1) {
+        function buildGeneratedLevel(id) {
             const tier = id - 20;
             const speed = Math.min(34, 13.6 + tier * 0.042);
             const gravity = Math.min(2.2, 1.26 + tier * 0.0022);
@@ -1642,7 +2025,7 @@
             const hue2 = (hue + 26) % 360;
             const hue3 = (hue + 54) % 360;
 
-            levels.push({
+            return {
                 id,
                 name: `Ultra Stage ${id}`,
                 target,
@@ -1663,7 +2046,7 @@
                     floor: `hsl(${hue3} 50% 12%)`,
                     line: `hsl(${(hue + 140) % 360} 90% 66%)`
                 }
-            });
+            };
         }
 
         const builds = [
@@ -1711,14 +2094,18 @@
         ];
 
         const icons = [
-            { id: "dart", name: "Dart", description: "Sharp base icon.", primary: "#d4d7dc", accent: "#ffffff", detail: "chevron" },
-            { id: "volt", name: "Volt", description: "Split crystal look.", primary: "#b8c6ff", accent: "#f3f7ff", detail: "split" },
-            { id: "core", name: "Core Eye", description: "Centered core symbol.", primary: "#d9d9db", accent: "#fefefe", detail: "core" },
-            { id: "fang", name: "Fang", description: "Aggressive fanged crest.", primary: "#bec0cb", accent: "#f2f5f8", detail: "fang" },
-            { id: "glyph", name: "Glyph", description: "Rune-like inner mark.", primary: "#d2d4de", accent: "#f9fbff", detail: "glyph" },
-            { id: "orbit", name: "Orbit", description: "Ring and core style.", primary: "#c5d0d8", accent: "#ffffff", detail: "ring" },
-            { id: "spire", name: "Spire", description: "Tall center shard.", primary: "#bfc7d1", accent: "#f4f9ff", detail: "spire" },
-            { id: "nova", name: "Nova", description: "Tri-star motif.", primary: "#c8cfda", accent: "#ffffff", detail: "star" }
+            { id: "dart", name: "Dart", description: "Tier-style blade face.", primary: "#b8bcc5", accent: "#f4f6fb", detail: "chevron" },
+            { id: "volt", name: "Volt", description: "Split mask icon.", primary: "#adb1ba", accent: "#eef1f7", detail: "split" },
+            { id: "core", name: "Core Eye", description: "Centered eye core.", primary: "#bfc3cb", accent: "#f6f8fc", detail: "core" },
+            { id: "fang", name: "Fang", description: "Fanged grin frame.", primary: "#a8adb7", accent: "#edf0f7", detail: "fang" },
+            { id: "glyph", name: "Glyph", description: "Runic cross layout.", primary: "#b3b9c4", accent: "#f5f7fc", detail: "glyph" },
+            { id: "orbit", name: "Orbit", description: "Ringed shell icon.", primary: "#b9bec8", accent: "#f8f9fd", detail: "ring" },
+            { id: "spire", name: "Spire", description: "Tall crest cut.", primary: "#aeb4bf", accent: "#edf1f9", detail: "spire" },
+            { id: "nova", name: "Nova", description: "Angular star shard.", primary: "#b6bcc8", accent: "#f6f8fd", detail: "star" },
+            { id: "shade", name: "Shade", description: "Dark split variant.", primary: "#9096a2", accent: "#eceff6", detail: "split" },
+            { id: "warden", name: "Warden", description: "Heavy ring guardian.", primary: "#9aa1ad", accent: "#f4f7fd", detail: "ring" },
+            { id: "frost", name: "Frost", description: "Icy spike crest.", primary: "#c5cad4", accent: "#ffffff", detail: "spire" },
+            { id: "rune", name: "Rune", description: "Dense glyph pattern.", primary: "#a1a8b5", accent: "#eef2fa", detail: "glyph" }
         ];
 
         const songs = {
@@ -1840,10 +2227,18 @@
         let builderTool;
         let builderCameraX;
         let builderBlockStyle;
+        let customBuild;
+        let customIcon;
+        let savedLevels;
+        let levelRatingsDb;
+        let ownerAccountName;
         let accountsDb;
         let currentAccountName;
         let geodeClickBufferFrames;
         let ghostHistory;
+        let levelSearchText;
+        let geodeShieldUsed;
+        let saveStatusTimer;
 
         function loadBest() {
             const raw = localStorage.getItem(BEST_KEY);
@@ -1857,7 +2252,7 @@
             if (!Number.isFinite(num)) {
                 return 1;
             }
-            return Math.min(levels.length, Math.max(1, Math.floor(num)));
+            return Math.min(TOTAL_LEVELS, Math.max(1, Math.floor(num)));
         }
 
         function loadBestPercentByLevel() {
@@ -1882,7 +2277,17 @@
             if (!saved) {
                 return icons[0].id;
             }
-            return icons.some((icon) => icon.id === saved) ? saved : icons[0].id;
+            const isValid = icons.some((icon) => icon.id === saved) || saved === "custom";
+            return isValid ? saved : icons[0].id;
+        }
+
+        function loadBuild() {
+            const saved = localStorage.getItem(BUILD_KEY);
+            if (!saved) {
+                return builds[0].id;
+            }
+            const isValid = builds.some((build) => build.id === saved) || saved === "custom";
+            return isValid ? saved : builds[0].id;
         }
 
         function loadSongChoice() {
@@ -1891,6 +2296,325 @@
                 return "auto";
             }
             return songChoices.some((choice) => choice.id === saved) ? saved : "auto";
+        }
+
+        function normalizeIconDetail(detail) {
+            const valid = ["chevron", "split", "core", "fang", "glyph", "ring", "spire", "star"];
+            return valid.includes(detail) ? detail : "chevron";
+        }
+
+        function loadCustomBuild() {
+            const fallback = {
+                id: "custom",
+                name: "Custom",
+                description: "Custom build from editor.",
+                jumpForce: -14,
+                gravityScale: 1,
+                speedScale: 1,
+                size: 42,
+                color: "#00ffd0"
+            };
+
+            const raw = localStorage.getItem(CUSTOM_BUILD_KEY);
+            if (!raw) {
+                return fallback;
+            }
+
+            try {
+                const parsed = JSON.parse(raw);
+                return {
+                    ...fallback,
+                    jumpForce: Number.isFinite(Number(parsed.jumpForce)) ? Number(parsed.jumpForce) : fallback.jumpForce,
+                    gravityScale: Number.isFinite(Number(parsed.gravityScale)) ? Number(parsed.gravityScale) : fallback.gravityScale,
+                    speedScale: Number.isFinite(Number(parsed.speedScale)) ? Number(parsed.speedScale) : fallback.speedScale,
+                    size: Number.isFinite(Number(parsed.size)) ? Number(parsed.size) : fallback.size
+                };
+            } catch {
+                return fallback;
+            }
+        }
+
+        function loadCustomIcon() {
+            const fallback = {
+                id: "custom",
+                name: "Custom",
+                description: "Custom icon from editor.",
+                primary: "#d4d7dc",
+                accent: "#ffffff",
+                detail: "chevron"
+            };
+
+            const raw = localStorage.getItem(CUSTOM_ICON_KEY);
+            if (!raw) {
+                return fallback;
+            }
+
+            try {
+                const parsed = JSON.parse(raw);
+                const primary = /^#[0-9a-f]{6}$/i.test(String(parsed.primary || "")) ? String(parsed.primary) : fallback.primary;
+                const accent = /^#[0-9a-f]{6}$/i.test(String(parsed.accent || "")) ? String(parsed.accent) : fallback.accent;
+                return {
+                    ...fallback,
+                    primary,
+                    accent,
+                    detail: normalizeIconDetail(parsed.detail)
+                };
+            } catch {
+                return fallback;
+            }
+        }
+
+        function loadSavedLevels() {
+            const raw = localStorage.getItem(SAVED_LEVELS_KEY);
+            if (!raw) {
+                return [];
+            }
+
+            try {
+                const parsed = JSON.parse(raw);
+                if (!Array.isArray(parsed)) {
+                    return [];
+                }
+
+                return parsed
+                    .map((entry) => ({
+                        id: Number(entry.id),
+                        name: String(entry.name || "Saved Level").slice(0, 30),
+                        published: Boolean(entry.published),
+                        publishedBy: sanitizeAccountName(entry.publishedBy || ""),
+                        createdAt: Number(entry.createdAt) || Date.now(),
+                        obstacles: cloneObstaclesForMainLevel(entry.obstacles || [])
+                    }))
+                    .filter((entry) => Number.isFinite(entry.id) && entry.id > 0);
+            } catch {
+                return [];
+            }
+        }
+
+        function loadLevelRatingsDb() {
+            const raw = localStorage.getItem(LEVEL_RATINGS_KEY);
+            if (!raw) {
+                return {};
+            }
+
+            try {
+                const parsed = JSON.parse(raw);
+                return parsed && typeof parsed === "object" ? parsed : {};
+            } catch {
+                return {};
+            }
+        }
+
+        function saveLevelRatingsDb() {
+            localStorage.setItem(LEVEL_RATINGS_KEY, JSON.stringify(levelRatingsDb));
+        }
+
+        function canCurrentAccountRateLevels() {
+            return Boolean(
+                currentAccountName
+                && currentAccountName !== "Guest"
+                && LEVEL_RATER_ACCOUNT_NAMES.includes(currentAccountName)
+            );
+        }
+
+        function getRatingEntry(levelId) {
+            const key = String(levelId);
+            const entry = levelRatingsDb[key];
+            if (!entry || typeof entry !== "object") {
+                return { total: 0, count: 0, votes: {} };
+            }
+
+            const total = Number(entry.total) || 0;
+            const count = Number(entry.count) || 0;
+            const votes = entry.votes && typeof entry.votes === "object" ? entry.votes : {};
+            return { total, count, votes };
+        }
+
+        function setRatingEntry(levelId, entry) {
+            levelRatingsDb[String(levelId)] = entry;
+            saveLevelRatingsDb();
+        }
+
+        function updateLevelRatingUi() {
+            const levelId = selectedLevel;
+            const entry = getRatingEntry(levelId);
+            const average = entry.count > 0 ? (entry.total / entry.count) : 0;
+            const accountVote = currentAccountName && entry.votes[currentAccountName]
+                ? Number(entry.votes[currentAccountName])
+                : null;
+
+            const canRate = canCurrentAccountRateLevels();
+            levelRateSelect.disabled = !canRate;
+            rateLevelBtn.disabled = !canRate;
+
+            if (accountVote) {
+                levelRateSelect.value = String(accountVote);
+            }
+
+            const baseText = entry.count > 0
+                ? `Rating: ${average.toFixed(2)}/5 (${entry.count} votes)`
+                : "Rating: not rated yet.";
+
+            if (canRate) {
+                levelRatingInfo.textContent = accountVote
+                    ? `${baseText} Your vote: ${accountVote}/5.`
+                    : `${baseText} You can rate as ${currentAccountName}.`;
+            } else {
+                levelRatingInfo.textContent = `${baseText} Only ${LEVEL_RATER_ACCOUNT_NAMES.join(" or ")} can rate.`;
+            }
+        }
+
+        function rateSelectedLevel() {
+            if (!canCurrentAccountRateLevels()) {
+                updateLevelRatingUi();
+                return;
+            }
+
+            const rating = Math.max(1, Math.min(5, Math.round(Number(levelRateSelect.value) || 0)));
+            const levelId = selectedLevel;
+            const entry = getRatingEntry(levelId);
+            const votes = { ...entry.votes };
+            const previous = Number(votes[currentAccountName] || 0);
+
+            if (previous > 0) {
+                entry.total -= previous;
+                entry.count -= 1;
+            }
+
+            votes[currentAccountName] = rating;
+            entry.total += rating;
+            entry.count += 1;
+            entry.votes = votes;
+
+            setRatingEntry(levelId, entry);
+            updateLevelRatingUi();
+        }
+
+        function saveSavedLevels() {
+            localStorage.setItem(SAVED_LEVELS_KEY, JSON.stringify(savedLevels));
+        }
+
+        function nextSavedLevelId() {
+            let maxId = 0;
+            savedLevels.forEach((entry) => {
+                if (entry.id > maxId) {
+                    maxId = entry.id;
+                }
+            });
+            return maxId + 1;
+        }
+
+        function buildStarterLevelObstacles(kind) {
+            const obstacle = (x, h, type = "spike", blockStyle = "classic") => ({
+                x,
+                w: type === "block" ? 34 : 28,
+                h,
+                type,
+                blockStyle: normalizeBlockStyle(blockStyle)
+            });
+
+            if (kind === "starter-1") {
+                return [
+                    obstacle(340, 42, "spike"),
+                    obstacle(460, 56, "spike"),
+                    obstacle(620, 64, "block", "stone"),
+                    obstacle(760, 52, "spike"),
+                    obstacle(920, 74, "block", "checker"),
+                    obstacle(1080, 58, "spike"),
+                    obstacle(1240, 70, "spike"),
+                    obstacle(1410, 82, "block", "metal")
+                ];
+            }
+
+            if (kind === "starter-2") {
+                return [
+                    obstacle(320, 48, "block", "tech"),
+                    obstacle(410, 62, "spike"),
+                    obstacle(500, 58, "block", "neon"),
+                    obstacle(620, 70, "spike"),
+                    obstacle(740, 66, "block", "glow"),
+                    obstacle(860, 82, "spike"),
+                    obstacle(980, 74, "block", "crystal"),
+                    obstacle(1120, 88, "spike"),
+                    obstacle(1260, 70, "block", "ice")
+                ];
+            }
+
+            return [
+                obstacle(360, 50, "spike"),
+                obstacle(470, 60, "spike"),
+                obstacle(590, 72, "spike"),
+                obstacle(740, 78, "block", "lava"),
+                obstacle(900, 66, "spike"),
+                obstacle(1020, 84, "spike"),
+                obstacle(1160, 76, "block", "brick"),
+                obstacle(1320, 92, "spike"),
+                obstacle(1490, 86, "block", "wood")
+            ];
+        }
+
+        function ensureThreeStarterLevels() {
+            if (savedLevels.length > 0) {
+                return;
+            }
+
+            const starters = [
+                { name: "Starter Sprint", kind: "starter-1" },
+                { name: "Block Rhythm", kind: "starter-2" },
+                { name: "Spike Corridor", kind: "starter-3" }
+            ];
+
+            starters.forEach((starter) => {
+                const id = nextSavedLevelId();
+                savedLevels.push({
+                    id,
+                    name: starter.name,
+                    published: true,
+                    publishedBy: "XSebikX",
+                    createdAt: Date.now() + id,
+                    obstacles: cloneObstaclesForMainLevel(buildStarterLevelObstacles(starter.kind))
+                });
+            });
+
+            saveSavedLevels();
+        }
+
+        function getPublishedLevelId(savedId) {
+            return PUBLISHED_LEVEL_BASE + savedId;
+        }
+
+        function getSavedLevelById(savedId) {
+            return savedLevels.find((entry) => entry.id === savedId) || null;
+        }
+
+        function isPublishedSavedLevelId(levelId) {
+            return Number.isFinite(levelId) && levelId >= PUBLISHED_LEVEL_BASE;
+        }
+
+        function getPublishedSavedLevelByLevelId(levelId) {
+            if (!isPublishedSavedLevelId(levelId)) {
+                return null;
+            }
+            const savedId = levelId - PUBLISHED_LEVEL_BASE;
+            const entry = getSavedLevelById(savedId);
+            if (!entry || !entry.published) {
+                return null;
+            }
+            return entry;
+        }
+
+        function levelMatchesSearch(level, searchText) {
+            if (!searchText) {
+                return true;
+            }
+            const text = String(searchText || "").trim().toLowerCase();
+            if (!text) {
+                return true;
+            }
+
+            const idMatch = String(level.id).includes(text);
+            const nameMatch = String(level.name || "").toLowerCase().includes(text);
+            return idMatch || nameMatch;
         }
 
         function sanitizeAccountName(raw) {
@@ -1943,8 +2667,192 @@
             localStorage.setItem(CURRENT_ACCOUNT_KEY, value);
         }
 
+        function loadOwnerAccountName() {
+            const saved = sanitizeAccountName(localStorage.getItem(OWNER_ACCOUNT_KEY) || "");
+            return saved || "";
+        }
+
+        function saveOwnerAccountName(value) {
+            const normalized = sanitizeAccountName(value || "");
+            if (!normalized) {
+                localStorage.removeItem(OWNER_ACCOUNT_KEY);
+                ownerAccountName = "";
+                return;
+            }
+            ownerAccountName = normalized;
+            localStorage.setItem(OWNER_ACCOUNT_KEY, ownerAccountName);
+        }
+
+        function loadOwnerMainLevels() {
+            const raw = localStorage.getItem(OWNER_LEVELS_KEY);
+            if (!raw) {
+                return [];
+            }
+
+            try {
+                const parsed = JSON.parse(raw);
+                return Array.isArray(parsed) ? parsed : [];
+            } catch {
+                return [];
+            }
+        }
+
+        function saveOwnerMainLevels() {
+            const compact = levels
+                .filter((level) => level && level.isOwnerMain)
+                .map((level) => ({
+                    name: String(level.name || "Owner Main Level").slice(0, 30),
+                    songId: String(level.songId || "circuit"),
+                    palette: level.palette || levels[0].palette,
+                    customObstacles: Array.isArray(level.customObstacles) ? level.customObstacles : []
+                }));
+            localStorage.setItem(OWNER_LEVELS_KEY, JSON.stringify(compact));
+        }
+
+        function cloneObstaclesForMainLevel(list) {
+            return (Array.isArray(list) ? list : [])
+                .map((obstacle) => ({
+                    x: Math.max(220, Math.round(Number(obstacle.x) || 220)),
+                    w: Math.max(12, Math.round(Number(obstacle.w) || 28)),
+                    h: Math.max(18, Math.round(Number(obstacle.h) || 50)),
+                    type: obstacle.type === "block" ? "block" : "spike",
+                    blockStyle: normalizeBlockStyle(obstacle.blockStyle)
+                }))
+                .sort((a, b) => a.x - b.x);
+        }
+
+        function makeOwnerMainLevelObject(name, obstacleList, songId, palette) {
+            const id = levels.length + 1;
+            const obstaclesList = cloneObstaclesForMainLevel(obstacleList);
+            const lastX = obstaclesList.length ? obstaclesList[obstaclesList.length - 1].x : 2200;
+            const dynamicTarget = Math.max(120, Math.round((lastX + 1200) / 40));
+
+            return {
+                id,
+                name,
+                target: dynamicTarget,
+                length: "Main",
+                difficulty: obstaclesList.length < 20 ? "Easy" : obstaclesList.length < 50 ? "Hard" : "Insane",
+                baseSpeed: 7.4,
+                gravity: 0.93,
+                minGap: 50,
+                maxGap: 100,
+                obstacleHeight: [24, 110],
+                obstacleWidth: [24, 36],
+                doubleChance: 0,
+                spawnMode: "custom",
+                songId: songId || "circuit",
+                palette: palette || levels[0].palette,
+                customObstacles: obstaclesList,
+                isOwnerMain: true
+            };
+        }
+
+        function loadOwnerMainLevelsIntoCampaign() {
+            const entries = loadOwnerMainLevels();
+            entries.forEach((entry) => {
+                if (levels.length >= TOTAL_LEVELS) {
+                    return;
+                }
+                const name = String(entry.name || `Owner Main ${levels.length + 1}`).slice(0, 30);
+                const level = makeOwnerMainLevelObject(name, entry.customObstacles, entry.songId, entry.palette);
+                levels.push(level);
+            });
+        }
+
+        function isOwnerLoggedIn() {
+            return Boolean(
+                currentAccountName
+                && currentAccountName !== "Guest"
+                && OWNER_ACCOUNT_NAMES.includes(currentAccountName)
+            );
+        }
+
+        function setOwnerInfo(message) {
+            ownerInfo.textContent = message;
+        }
+
+        function updateOwnerToolsState() {
+            const isOwner = isOwnerLoggedIn();
+            ownerToolsCard.classList.toggle("hidden", !isOwner);
+
+            ownerLevelNameInput.disabled = !isOwner;
+            ownerPublishBtn.disabled = !isOwner;
+            ownerDeleteBtn.disabled = !isOwner;
+
+            if (isOwner) {
+                setOwnerInfo(`Owner active: ${currentAccountName}. You can publish custom level as main level.`);
+            } else {
+                setOwnerInfo(`Owner tools are visible only on accounts ${OWNER_ACCOUNT_NAMES.join(", ")}. Current account: ${currentAccountName}.`);
+            }
+        }
+
+        function publishCustomLevelAsMain() {
+            if (!isOwnerLoggedIn()) {
+                setOwnerInfo(`Owner action blocked. Only ${OWNER_ACCOUNT_NAMES.join(" or ")} can publish main levels.`);
+                return;
+            }
+            if (levels.length >= TOTAL_LEVELS) {
+                setOwnerInfo("Cannot publish: campaign reached max level count.");
+                return;
+            }
+            if (!customLevelObstacles.length) {
+                setOwnerInfo("Cannot publish: custom level is empty.");
+                return;
+            }
+
+            const requestedName = sanitizeAccountName(ownerLevelNameInput.value).slice(0, 30);
+            const levelName = requestedName || `Owner Main ${levels.length + 1}`;
+            const sourceLevel = getLevelById(selectedLevel);
+            const songId = sourceLevel && sourceLevel.songId ? sourceLevel.songId : "circuit";
+            const palette = sourceLevel && sourceLevel.palette ? sourceLevel.palette : levels[0].palette;
+
+            const newLevel = makeOwnerMainLevelObject(levelName, customLevelObstacles, songId, palette);
+            levels.push(newLevel);
+            saveOwnerMainLevels();
+
+            unlockedLevel = Math.max(unlockedLevel, newLevel.id);
+            saveUnlockedLevel(unlockedLevel);
+            selectedLevel = newLevel.id;
+            ownerLevelNameInput.value = "";
+            updateSelectors();
+            if (!running) {
+                resetGame();
+            }
+            setOwnerInfo(`Published main level ${newLevel.id}: ${newLevel.name}`);
+            updateOwnerToolsState();
+        }
+
+        function deleteLastOwnerMainLevel() {
+            if (!isOwnerLoggedIn()) {
+                setOwnerInfo(`Delete blocked. Only ${OWNER_ACCOUNT_NAMES.join(" or ")} can remove owner main levels.`);
+                return;
+            }
+            const last = levels[levels.length - 1];
+            if (!last || !last.isOwnerMain) {
+                setOwnerInfo("No owner main level at campaign end to delete.");
+                return;
+            }
+
+            const removed = levels.pop();
+            saveOwnerMainLevels();
+
+            if (selectedLevel === removed.id) {
+                selectedLevel = Math.min(unlockedLevel, levels.length > 0 ? levels.length : 1);
+            }
+
+            updateSelectors();
+            if (!running) {
+                resetGame();
+            }
+            setOwnerInfo(`Removed owner main level ${removed.id}: ${removed.name}`);
+            updateOwnerToolsState();
+        }
+
         function refreshAccountLabel() {
             accountLabel.textContent = `Account: ${currentAccountName || "Guest"}`;
+            updateOwnerToolsState();
+            updateLevelRatingUi();
         }
 
         function setAccountInfo(message) {
@@ -2052,12 +2960,24 @@
             localStorage.setItem(UNLOCKED_LEVEL_KEY, String(value));
         }
 
+        function saveBuild(value) {
+            localStorage.setItem(BUILD_KEY, value);
+        }
+
         function saveIcon(value) {
             localStorage.setItem(ICON_KEY, value);
         }
 
         function saveSongChoice(value) {
             localStorage.setItem(SONG_CHOICE_KEY, value);
+        }
+
+        function saveCustomBuild() {
+            localStorage.setItem(CUSTOM_BUILD_KEY, JSON.stringify(customBuild));
+        }
+
+        function saveCustomIcon() {
+            localStorage.setItem(CUSTOM_ICON_KEY, JSON.stringify(customIcon));
         }
 
         function saveCustomLevelObstacles() {
@@ -2085,6 +3005,170 @@
             localStorage.setItem(BEST_PERCENT_KEY, JSON.stringify(bestPercentByLevel));
         }
 
+        function setSaveStatus(message, isError = false) {
+            saveStatusLabel.textContent = message;
+            saveStatusLabel.style.color = isError ? "#ffc0b8" : "#9decc0";
+
+            if (saveStatusTimer) {
+                clearTimeout(saveStatusTimer);
+            }
+
+            if (!isError) {
+                saveStatusTimer = setTimeout(() => {
+                    saveStatusLabel.textContent = "Save ready.";
+                    saveStatusLabel.style.color = "#9decc0";
+                }, 3200);
+            }
+        }
+
+        function loadProgressSnapshot() {
+            const raw = localStorage.getItem(PROGRESS_SNAPSHOT_KEY);
+            if (!raw) {
+                return null;
+            }
+
+            try {
+                const parsed = JSON.parse(raw);
+                return parsed && typeof parsed === "object" ? parsed : null;
+            } catch {
+                return null;
+            }
+        }
+
+        function buildProgressSnapshot() {
+            return {
+                version: 1,
+                savedAt: Date.now(),
+                selectedLevel,
+                selectedBuild,
+                selectedMode,
+                selectedIcon,
+                selectedSongChoice,
+                selectedPracticeMode,
+                selectedFeatureSet,
+                unlockedLevel,
+                best,
+                bestPercentByLevel,
+                builderBlockStyle,
+                hacks,
+                geodeMods
+            };
+        }
+
+        function applyProgressSnapshot(snapshot) {
+            if (!snapshot || typeof snapshot !== "object") {
+                return false;
+            }
+
+            const parsedBest = Number(snapshot.best);
+            if (Number.isFinite(parsedBest)) {
+                best = Math.max(0, Math.floor(parsedBest));
+            }
+
+            const parsedUnlocked = Number(snapshot.unlockedLevel);
+            if (Number.isFinite(parsedUnlocked)) {
+                unlockedLevel = Math.max(1, Math.min(TOTAL_LEVELS, Math.floor(parsedUnlocked)));
+            }
+
+            const parsedLevel = Number(snapshot.selectedLevel);
+            if (Number.isFinite(parsedLevel)) {
+                if (parsedLevel === CUSTOM_LEVEL_ID || isPublishedSavedLevelId(parsedLevel)) {
+                    selectedLevel = Math.floor(parsedLevel);
+                } else {
+                    selectedLevel = Math.max(1, Math.min(TOTAL_LEVELS, Math.floor(parsedLevel)));
+                }
+            }
+
+            selectedBuild = (snapshot.selectedBuild === "custom" || builds.some((build) => build.id === snapshot.selectedBuild))
+                ? snapshot.selectedBuild
+                : selectedBuild;
+
+            selectedMode = modes.some((mode) => mode.id === snapshot.selectedMode)
+                ? snapshot.selectedMode
+                : selectedMode;
+
+            selectedIcon = (snapshot.selectedIcon === "custom" || icons.some((icon) => icon.id === snapshot.selectedIcon))
+                ? snapshot.selectedIcon
+                : selectedIcon;
+
+            selectedSongChoice = songChoices.some((choice) => choice.id === snapshot.selectedSongChoice)
+                ? snapshot.selectedSongChoice
+                : selectedSongChoice;
+
+            selectedPracticeMode = snapshot.selectedPracticeMode === "on" ? "on" : "off";
+            selectedFeatureSet = snapshot.selectedFeatureSet === "classic" ? "classic" : "twoTwo";
+
+            if (snapshot.bestPercentByLevel && typeof snapshot.bestPercentByLevel === "object") {
+                bestPercentByLevel = snapshot.bestPercentByLevel;
+            }
+
+            builderBlockStyle = normalizeBlockStyle(snapshot.builderBlockStyle);
+
+            if (snapshot.hacks && typeof snapshot.hacks === "object") {
+                hacks = {
+                    ...hacks,
+                    noclip: Boolean(snapshot.hacks.noclip),
+                    unlockAllLevels: Boolean(snapshot.hacks.unlockAllLevels),
+                    speedMultiplier: Math.max(0.5, Math.min(3, Number(snapshot.hacks.speedMultiplier) || 1)),
+                    noLimitSpeed: Boolean(snapshot.hacks.noLimitSpeed),
+                    noLimitSpeedValue: Math.max(0.1, Number(snapshot.hacks.noLimitSpeedValue) || 5),
+                    showHitboxes: Boolean(snapshot.hacks.showHitboxes),
+                    autoComplete: Boolean(snapshot.hacks.autoComplete),
+                    jumpUfo: Boolean(snapshot.hacks.jumpUfo),
+                    forceGamemode: modes.some((mode) => mode.id === snapshot.hacks.forceGamemode)
+                        ? snapshot.hacks.forceGamemode
+                        : "off"
+                };
+            }
+
+            if (snapshot.geodeMods && typeof snapshot.geodeMods === "object") {
+                geodeMods = {
+                    ...geodeMods,
+                    speedBoost: Boolean(snapshot.geodeMods.speedBoost),
+                    lowGravity: Boolean(snapshot.geodeMods.lowGravity),
+                    showHitboxes: Boolean(snapshot.geodeMods.showHitboxes),
+                    rainbowIcon: Boolean(snapshot.geodeMods.rainbowIcon),
+                    autoRetry: Boolean(snapshot.geodeMods.autoRetry),
+                    clickFrames: Boolean(snapshot.geodeMods.clickFrames),
+                    globedDemo: Boolean(snapshot.geodeMods.globedDemo),
+                    miniIcon: Boolean(snapshot.geodeMods.miniIcon),
+                    timeWarp: Boolean(snapshot.geodeMods.timeWarp),
+                    shield: Boolean(snapshot.geodeMods.shield)
+                };
+            }
+
+            return true;
+        }
+
+        function saveProgressSnapshot(manual = false) {
+            try {
+                const snapshot = buildProgressSnapshot();
+                localStorage.setItem(PROGRESS_SNAPSHOT_KEY, JSON.stringify(snapshot));
+
+                // Keep legacy keys synchronized for backward compatibility.
+                saveBest(best);
+                saveBestPercentByLevel();
+                saveUnlockedLevel(unlockedLevel);
+                saveBuild(selectedBuild);
+                saveIcon(selectedIcon);
+                saveSongChoice(selectedSongChoice);
+                saveCustomBuild();
+                saveCustomIcon();
+                saveCustomLevelObstacles();
+                saveSavedLevels();
+                saveLevelRatingsDb();
+
+                if (manual) {
+                    const stamp = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+                    setSaveStatus(`Saved at ${stamp}`);
+                }
+            } catch {
+                if (manual) {
+                    setSaveStatus("Save failed", true);
+                }
+            }
+        }
+
         function clearAllSavedDataOnce() {
             if (localStorage.getItem(CLEAR_ONCE_KEY) === "1") {
                 return;
@@ -2094,7 +3178,13 @@
             localStorage.removeItem(BEST_PERCENT_KEY);
             localStorage.removeItem(UNLOCKED_LEVEL_KEY);
             localStorage.removeItem(ICON_KEY);
+            localStorage.removeItem(BUILD_KEY);
             localStorage.removeItem(SONG_CHOICE_KEY);
+            localStorage.removeItem(CUSTOM_BUILD_KEY);
+            localStorage.removeItem(CUSTOM_ICON_KEY);
+            localStorage.removeItem(LEVEL_RATINGS_KEY);
+            localStorage.removeItem(OWNER_ACCOUNT_KEY);
+            localStorage.removeItem(OWNER_LEVELS_KEY);
 
             // Cleanup older keys from previous versions.
             localStorage.removeItem("dash-lite-best");
@@ -2131,10 +3221,49 @@
                     palette: { sky: "#2b365e", mid: "#1e2a4a", floor: "#121a2f", line: "#72d9ff" }
                 };
             }
-            return levels.find((level) => level.id === id) || levels[0];
+
+            const publishedSaved = getPublishedSavedLevelByLevelId(id);
+            if (publishedSaved) {
+                const publishedLevelId = getPublishedLevelId(publishedSaved.id);
+                const lastX = publishedSaved.obstacles.length
+                    ? publishedSaved.obstacles[publishedSaved.obstacles.length - 1].x
+                    : 2200;
+                const dynamicTarget = Math.max(120, Math.round((lastX + 1200) / 40));
+                return {
+                    id: publishedLevelId,
+                    name: `Published: ${publishedSaved.name}`,
+                    target: dynamicTarget,
+                    length: "Published",
+                    difficulty: publishedSaved.obstacles.length < 20 ? "Easy" : publishedSaved.obstacles.length < 50 ? "Hard" : "Insane",
+                    baseSpeed: 7.4,
+                    gravity: 0.93,
+                    minGap: 50,
+                    maxGap: 100,
+                    obstacleHeight: [24, 110],
+                    obstacleWidth: [24, 36],
+                    doubleChance: 0,
+                    spawnMode: "custom",
+                    songId: "circuit",
+                    palette: { sky: "#2b365e", mid: "#1e2a4a", floor: "#121a2f", line: "#72d9ff" },
+                    customObstacles: cloneObstaclesForMainLevel(publishedSaved.obstacles)
+                };
+            }
+
+            if (id < 1 || id > TOTAL_LEVELS) {
+                return levels[0];
+            }
+
+            if (id <= levels.length) {
+                return levels.find((level) => level.id === id) || levels[0];
+            }
+
+            return buildGeneratedLevel(id);
         }
 
         function getBuildById(id) {
+            if (id === "custom") {
+                return customBuild;
+            }
             return builds.find((build) => build.id === id) || builds[0];
         }
 
@@ -2143,6 +3272,9 @@
         }
 
         function getIconById(id) {
+            if (id === "custom") {
+                return customIcon;
+            }
             return icons.find((icon) => icon.id === id) || icons[0];
         }
 
@@ -2154,10 +3286,260 @@
             if (selectedLevel === CUSTOM_LEVEL_ID) {
                 return;
             }
+            if (isPublishedSavedLevelId(selectedLevel)) {
+                return;
+            }
             const unlockAll = launcherMode === "hack" && hacks.unlockAllLevels;
-            const allowedLevel = unlockAll ? levels.length : unlockedLevel;
+            const allowedLevel = unlockAll ? TOTAL_LEVELS : unlockedLevel;
             if (selectedLevel > allowedLevel) {
                 selectedLevel = allowedLevel;
+            }
+        }
+
+        function getAllowedCampaignLevel() {
+            const unlockAll = launcherMode === "hack" && hacks.unlockAllLevels;
+            return unlockAll ? TOTAL_LEVELS : unlockedLevel;
+        }
+
+        function getVisibleLevelIds(maxLevel, focusLevel) {
+            const safeMax = Math.max(1, Math.floor(maxLevel));
+            const safeFocus = Math.max(1, Math.min(safeMax, Math.floor(focusLevel)));
+
+            if (safeMax <= LEVEL_SELECT_WINDOW) {
+                const all = [];
+                for (let id = 1; id <= safeMax; id += 1) {
+                    all.push(id);
+                }
+                return all;
+            }
+
+            const ids = [1];
+            const bodySize = LEVEL_SELECT_WINDOW - 2;
+            const half = Math.floor(bodySize / 2);
+            let start = Math.max(2, safeFocus - half);
+            let end = Math.min(safeMax - 1, start + bodySize - 1);
+            start = Math.max(2, end - bodySize + 1);
+
+            if (start > 2) {
+                ids.push(-1);
+            }
+
+            for (let id = start; id <= end; id += 1) {
+                ids.push(id);
+            }
+
+            if (end < safeMax - 1) {
+                ids.push(-2);
+            }
+
+            ids.push(safeMax);
+            return ids;
+        }
+
+        function selectCampaignLevel(targetLevel) {
+            const requested = Number(targetLevel);
+            if (!Number.isFinite(requested)) {
+                return;
+            }
+
+            const allowedLevel = getAllowedCampaignLevel();
+            selectedLevel = Math.max(1, Math.min(allowedLevel, Math.floor(requested)));
+            updateSelectors();
+            if (!running) {
+                resetGame();
+            }
+        }
+
+        function parseJumpLevelInput(rawValue) {
+            const raw = String(rawValue || "").trim().toLowerCase();
+            if (!raw) {
+                return null;
+            }
+
+            const compact = raw.replace(/[,_\s]/g, "");
+            const match = compact.match(/^(\d+(?:\.\d+)?)([kmb]?)$/i);
+            if (!match) {
+                return null;
+            }
+
+            const base = Number(match[1]);
+            if (!Number.isFinite(base)) {
+                return null;
+            }
+
+            const suffix = match[2];
+            const multiplier = suffix === "k"
+                ? 1000
+                : suffix === "m"
+                    ? 1000000
+                    : suffix === "b"
+                        ? 1000000000
+                        : 1;
+
+            return Math.floor(base * multiplier);
+        }
+
+        function jumpToRequestedLevel() {
+            const raw = String(levelJumpInput.value || "").trim();
+            if (!raw) {
+                return;
+            }
+
+            const parsed = parseJumpLevelInput(raw);
+            if (!Number.isFinite(parsed) || parsed < 1) {
+                levelJumpInput.setCustomValidity("Use a valid number like 500, 250k, or 5m.");
+                levelJumpInput.reportValidity();
+                return;
+            }
+
+            levelJumpInput.setCustomValidity("");
+            selectCampaignLevel(parsed);
+        }
+
+        function getSelectedSavedLevelId() {
+            const value = Number(savedLevelsSelect.value);
+            return Number.isFinite(value) ? value : null;
+        }
+
+        function saveCurrentAsSavedLevel() {
+            if (!customLevelObstacles.length) {
+                builderInfo.textContent = "Cannot save: custom level is empty.";
+                return;
+            }
+
+            const requestedName = sanitizeAccountName(savedLevelNameInput.value).slice(0, 30);
+            const fallbackName = `Saved Level ${savedLevels.length + 1}`;
+            const levelName = requestedName || fallbackName;
+            const id = nextSavedLevelId();
+
+            savedLevels.push({
+                id,
+                name: levelName,
+                published: false,
+                publishedBy: "",
+                createdAt: Date.now(),
+                obstacles: cloneObstaclesForMainLevel(customLevelObstacles)
+            });
+
+            saveSavedLevels();
+            savedLevelNameInput.value = "";
+            updateSelectors();
+            builderInfo.textContent = `Saved level created: ${levelName}.`;
+        }
+
+        function loadSelectedSavedLevel() {
+            const selectedId = getSelectedSavedLevelId();
+            if (!selectedId) {
+                return;
+            }
+
+            const entry = getSavedLevelById(selectedId);
+            if (!entry) {
+                return;
+            }
+
+            customLevelObstacles = cloneObstaclesForMainLevel(entry.obstacles).map((obstacle) => ({
+                ...obstacle,
+                y: groundY - obstacle.h
+            }));
+            saveCustomLevelObstacles();
+            selectedLevel = CUSTOM_LEVEL_ID;
+            updateSelectors();
+            if (!running) {
+                resetGame();
+            }
+            builderInfo.textContent = `Loaded saved level: ${entry.name}.`;
+        }
+
+        function deleteSelectedSavedLevel() {
+            const selectedId = getSelectedSavedLevelId();
+            if (!selectedId) {
+                return;
+            }
+
+            const before = savedLevels.length;
+            savedLevels = savedLevels.filter((entry) => entry.id !== selectedId);
+            if (savedLevels.length === before) {
+                return;
+            }
+
+            saveSavedLevels();
+            if (isPublishedSavedLevelId(selectedLevel) && (selectedLevel - PUBLISHED_LEVEL_BASE) === selectedId) {
+                selectedLevel = CUSTOM_LEVEL_ID;
+            }
+            updateSelectors();
+            if (!running) {
+                resetGame();
+            }
+            builderInfo.textContent = "Saved level deleted.";
+        }
+
+        function publishSelectedSavedLevel() {
+            const selectedId = getSelectedSavedLevelId();
+            if (!selectedId) {
+                return;
+            }
+
+            const entry = getSavedLevelById(selectedId);
+            if (!entry) {
+                return;
+            }
+
+            entry.published = true;
+            entry.publishedBy = currentAccountName && currentAccountName !== "Guest"
+                ? currentAccountName
+                : "Guest";
+            saveSavedLevels();
+            selectedLevel = getPublishedLevelId(entry.id);
+            updateSelectors();
+            if (!running) {
+                resetGame();
+            }
+            builderInfo.textContent = `Published to main list: ${entry.name}.`;
+        }
+
+        function clampNumber(value, min, max, fallback) {
+            const num = Number(value);
+            if (!Number.isFinite(num)) {
+                return fallback;
+            }
+            return Math.max(min, Math.min(max, num));
+        }
+
+        function applyCustomBuildEditor() {
+            customBuild.jumpForce = clampNumber(buildJumpInput.value, -24, -8, customBuild.jumpForce);
+            customBuild.gravityScale = clampNumber(buildGravityInput.value, 0.6, 1.5, customBuild.gravityScale);
+            customBuild.speedScale = clampNumber(buildSpeedInput.value, 0.6, 1.6, customBuild.speedScale);
+            customBuild.size = Math.round(clampNumber(buildSizeInput.value, 28, 64, customBuild.size));
+
+            selectedBuild = "custom";
+            saveBuild(selectedBuild);
+            saveCustomBuild();
+            updateSelectors();
+            if (!running) {
+                resetGame();
+            }
+        }
+
+        function applyCustomIconEditor() {
+            const primary = String(iconPrimaryInput.value || "");
+            const accent = String(iconAccentInput.value || "");
+            const isHex = (value) => /^#[0-9a-f]{6}$/i.test(value);
+
+            if (isHex(primary)) {
+                customIcon.primary = primary;
+            }
+            if (isHex(accent)) {
+                customIcon.accent = accent;
+            }
+            customIcon.detail = normalizeIconDetail(iconDetailInput.value);
+
+            selectedIcon = "custom";
+            saveIcon(selectedIcon);
+            saveCustomIcon();
+            updateSelectors();
+            if (!running) {
+                resetGame();
             }
         }
 
@@ -2183,7 +3565,11 @@
         }
 
         function updateHackPanelVisibility() {
-            const shouldShow = launcherMode === "hack" && hackPanelOpen;
+            const shouldShow = launcherMode === "hack"
+                && hackPanelOpen
+                && running
+                && overlay.classList.contains("hidden")
+                && !builderMode;
             hackPanel.classList.toggle("hidden", !shouldShow);
         }
 
@@ -2195,10 +3581,17 @@
             geodeAutoRetry.checked = geodeMods.autoRetry;
             geodeClickFrames.checked = geodeMods.clickFrames;
             geodeGlobed.checked = geodeMods.globedDemo;
+            geodeMiniIcon.checked = geodeMods.miniIcon;
+            geodeTimeWarp.checked = geodeMods.timeWarp;
+            geodeShield.checked = geodeMods.shield;
         }
 
         function updateGeodePanelVisibility() {
-            const shouldShow = launcherMode === "geode" && geodePanelOpen;
+            const shouldShow = launcherMode === "geode"
+                && geodePanelOpen
+                && running
+                && overlay.classList.contains("hidden")
+                && !builderMode;
             geodePanel.classList.toggle("hidden", !shouldShow);
         }
 
@@ -2211,6 +3604,11 @@
             const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
             const show = isTouchDevice && running && !builderMode && overlay.classList.contains("hidden");
             touchJumpBtn.classList.toggle("hidden", !show);
+        }
+
+        function updateGeodeToggleButtonVisibility() {
+            const show = launcherMode === "geode" && running && overlay.classList.contains("hidden") && !builderMode;
+            geodeToggleBtn.classList.toggle("hidden", !show);
         }
 
         function applyHackModeDefaults() {
@@ -2247,6 +3645,9 @@
             geodeMods.autoRetry = false;
             geodeMods.clickFrames = true;
             geodeMods.globedDemo = false;
+            geodeMods.miniIcon = false;
+            geodeMods.timeWarp = false;
+            geodeMods.shield = false;
             syncGeodeInputs();
             updateGeodePanelVisibility();
         }
@@ -2482,20 +3883,57 @@
             clampSelection();
 
             levelSelect.innerHTML = "";
-            const unlockAll = launcherMode === "hack" && hacks.unlockAllLevels;
-            const allowedLevel = unlockAll ? levels.length : unlockedLevel;
-            levels.forEach((level) => {
+            const allowedLevel = getAllowedCampaignLevel();
+            const focusLevel = selectedLevel === CUSTOM_LEVEL_ID ? allowedLevel : selectedLevel;
+            const visibleLevelIds = getVisibleLevelIds(allowedLevel, focusLevel);
+            const filterText = String(levelSearchText || "").trim().toLowerCase();
+            let renderedLevelOptions = 0;
+
+            visibleLevelIds.forEach((levelId) => {
                 const option = document.createElement("option");
-                option.value = String(level.id);
-                option.textContent = level.id <= allowedLevel
-                    ? `Level ${level.id}: ${level.name}`
-                    : `Level ${level.id}: Locked`;
-                option.disabled = level.id > allowedLevel;
-                if (level.id === selectedLevel) {
+
+                if (levelId < 0) {
+                    option.value = `sep-${Math.abs(levelId)}`;
+                    option.textContent = "...";
+                    option.disabled = true;
+                    levelSelect.append(option);
+                    return;
+                }
+
+                const level = getLevelById(levelId);
+                if (!levelMatchesSearch(level, filterText)) {
+                    return;
+                }
+                option.value = String(levelId);
+                option.textContent = levelId <= allowedLevel
+                    ? `Level ${levelId}: ${level.name}`
+                    : `Level ${levelId}: Locked`;
+                option.disabled = levelId > allowedLevel;
+                if (levelId === selectedLevel) {
                     option.selected = true;
                 }
                 levelSelect.append(option);
+                renderedLevelOptions += 1;
             });
+
+            const publishedLevels = savedLevels.filter((entry) => entry.published);
+            if (publishedLevels.length) {
+                const sortedPublished = [...publishedLevels].sort((a, b) => a.id - b.id);
+                sortedPublished.forEach((entry) => {
+                    const levelId = getPublishedLevelId(entry.id);
+                    const level = getLevelById(levelId);
+                    if (!levelMatchesSearch(level, filterText)) {
+                        return;
+                    }
+                    const option = document.createElement("option");
+                    option.value = String(levelId);
+                    const byText = entry.publishedBy ? ` by ${entry.publishedBy}` : "";
+                    option.textContent = `Main Published ${entry.id}: ${entry.name}${byText}`;
+                    option.selected = selectedLevel === levelId;
+                    levelSelect.append(option);
+                    renderedLevelOptions += 1;
+                });
+            }
 
             const customOption = document.createElement("option");
             customOption.value = "custom";
@@ -2503,7 +3941,48 @@
             const blockCount = customLevelObstacles.length - spikeCount;
             customOption.textContent = `Custom: Builder Level (${spikeCount} spikes, ${blockCount} blocks)`;
             customOption.selected = selectedLevel === CUSTOM_LEVEL_ID;
-            levelSelect.append(customOption);
+            if (!filterText || "custom".includes(filterText) || "builder".includes(filterText)) {
+                levelSelect.append(customOption);
+                renderedLevelOptions += 1;
+            }
+
+            if (renderedLevelOptions === 0) {
+                const emptyOption = document.createElement("option");
+                emptyOption.value = "";
+                emptyOption.textContent = "No levels match search. Clear search to see all.";
+                emptyOption.disabled = true;
+                emptyOption.selected = true;
+                levelSelect.append(emptyOption);
+            }
+
+            savedLevelsSelect.innerHTML = "";
+            if (!savedLevels.length) {
+                const emptyOption = document.createElement("option");
+                emptyOption.value = "";
+                emptyOption.textContent = "No saved levels yet";
+                savedLevelsSelect.append(emptyOption);
+                savedLevelsSelect.disabled = true;
+            } else {
+                savedLevelsSelect.disabled = false;
+                const sortedSaved = [...savedLevels].sort((a, b) => b.createdAt - a.createdAt);
+                sortedSaved.forEach((entry) => {
+                    const option = document.createElement("option");
+                    option.value = String(entry.id);
+                    option.textContent = `${entry.name}${entry.published ? " [Published]" : ""}`;
+                    savedLevelsSelect.append(option);
+                });
+            }
+
+            levelJumpInput.min = "1";
+            levelJumpInput.max = String(allowedLevel);
+            levelJumpInput.placeholder = `e.g. 500, 250k, 5m (max ${allowedLevel.toLocaleString()})`;
+            levelJumpInput.title = "Jump to a level number. Supports k/m/b shorthand, like 250k or 5m.";
+            levelJumpInput.setCustomValidity("");
+            if (selectedLevel !== CUSTOM_LEVEL_ID) {
+                levelJumpInput.value = String(selectedLevel);
+            } else {
+                levelJumpInput.value = "";
+            }
 
             buildSelect.innerHTML = "";
             builds.forEach((build) => {
@@ -2515,6 +3994,11 @@
                 }
                 buildSelect.append(option);
             });
+            const customBuildOption = document.createElement("option");
+            customBuildOption.value = "custom";
+            customBuildOption.textContent = "Custom (Editor)";
+            customBuildOption.selected = selectedBuild === "custom";
+            buildSelect.append(customBuildOption);
 
             modeSelect.innerHTML = "";
             modes.forEach((mode) => {
@@ -2537,6 +4021,11 @@
                 }
                 iconSelect.append(option);
             });
+            const customIconOption = document.createElement("option");
+            customIconOption.value = "custom";
+            customIconOption.textContent = "Custom (Editor)";
+            customIconOption.selected = selectedIcon === "custom";
+            iconSelect.append(customIconOption);
 
             songSelect.innerHTML = "";
             songChoices.forEach((choice) => {
@@ -2558,11 +4047,22 @@
             const mode = getModeById(selectedMode);
             const icon = getIconById(selectedIcon);
             const songChoice = getSongChoiceById(selectedSongChoice);
-            levelInfo.textContent = `Length: ${level.length}. Difficulty: ${level.difficulty}. Target ${level.target}. Song: ${getSongNameForLevel(level)}`;
+
+            buildJumpInput.value = String(customBuild.jumpForce);
+            buildGravityInput.value = String(customBuild.gravityScale);
+            buildSpeedInput.value = String(customBuild.speedScale);
+            buildSizeInput.value = String(customBuild.size);
+            iconPrimaryInput.value = customIcon.primary;
+            iconAccentInput.value = customIcon.accent;
+            iconDetailInput.value = normalizeIconDetail(customIcon.detail);
+
+            levelInfo.textContent = `Length: ${level.length}. Difficulty: ${level.difficulty}. Target ${level.target}. Song: ${getSongNameForLevel(level)}. Campaign total: ${TOTAL_LEVELS.toLocaleString()} levels. Published saved levels: ${savedLevels.filter((entry) => entry.published).length}.`;
             buildInfo.textContent = build.description;
             modeInfo.textContent = mode.description;
             iconInfo.textContent = icon.description;
             songInfo.textContent = songChoice.description;
+            buildEditorInfo.textContent = `Custom build: jump ${customBuild.jumpForce.toFixed(1)}, gravity ${customBuild.gravityScale.toFixed(2)}, speed ${customBuild.speedScale.toFixed(2)}, size ${Math.round(customBuild.size)}.`;
+            iconEditorInfo.textContent = `Custom icon: primary ${customIcon.primary.toUpperCase()}, accent ${customIcon.accent.toUpperCase()}, detail ${normalizeIconDetail(customIcon.detail)}.`;
             practiceInfo.textContent = selectedPracticeMode === "on"
                 ? "On: respawn from checkpoints. Z = place, X = delete."
                 : "Off: classic one-attempt gameplay.";
@@ -2571,7 +4071,7 @@
                 : "Classic mode: old-school behavior.";
             builderInfo.textContent = builderMode
                 ? `Builder ON | Tool: ${getBuilderToolLabel()} | Block Style: ${normalizeBlockStyle(builderBlockStyle)} | Obstacles: ${customLevelObstacles.length} | Pan: A/D`
-                : `Build a custom level: click Open Builder, then click canvas to place (${customLevelObstacles.length} saved).`;
+                : `Build a custom level: click Open Builder, then click canvas to place (${customLevelObstacles.length} saved). Published levels appear in the main list for all local accounts.`;
             builderToggleBtn.textContent = builderMode ? "Close Builder" : "Open Builder";
             builderToolBtn.textContent = `Tool: ${getBuilderToolLabel()}`;
             refreshAccountLabel();
@@ -2582,6 +4082,7 @@
             modeLabel.textContent = `Mode: ${mode.name}`;
             iconLabel.textContent = `Icon: ${icon.name}`;
             nextIconBtn.textContent = `Icon Setting: ${icon.name}`;
+            updateLevelRatingUi();
             updateMusicLabel();
         }
 
@@ -2616,12 +4117,19 @@
             speed = activeLevel.baseSpeed * activeBuild.speedScale;
             nextObstacleTimer = 75;
             gameOver = false;
+            geodeShieldUsed = false;
             checkpointState = null;
             lastAutoCheckpointScore = 0;
             cameraPulse = 0;
 
             if (activeLevel.spawnMode === "custom") {
-                obstacles = customLevelObstacles.map((obstacle) => ({
+                const sourceObstacles = activeLevel.id === CUSTOM_LEVEL_ID
+                    ? customLevelObstacles
+                    : Array.isArray(activeLevel.customObstacles)
+                        ? activeLevel.customObstacles
+                        : [];
+
+                obstacles = sourceObstacles.map((obstacle) => ({
                     x: obstacle.x,
                     y: groundY - obstacle.h,
                     w: obstacle.w,
@@ -2784,6 +4292,9 @@
             overlay.classList.add("hidden");
             updatePracticeTabVisibility();
             updateTouchJumpButtonVisibility();
+            updateHackPanelVisibility();
+            updateGeodePanelVisibility();
+            updateGeodeToggleButtonVisibility();
             try {
                 startSong(activeLevel);
             } catch (error) {
@@ -2811,6 +4322,9 @@
             overlay.classList.remove("hidden");
             updatePracticeTabVisibility();
             updateTouchJumpButtonVisibility();
+            updateHackPanelVisibility();
+            updateGeodePanelVisibility();
+            updateGeodeToggleButtonVisibility();
             stopSong();
         }
 
@@ -2832,6 +4346,7 @@
             iconLabel.textContent = `Icon: ${activeIcon ? activeIcon.name : getIconById(selectedIcon).name}`;
             updatePracticeTabVisibility();
             updateTouchJumpButtonVisibility();
+            updateGeodeToggleButtonVisibility();
         }
 
         function saveCheckpoint() {
@@ -3308,6 +4823,9 @@
             } else if (launcherMode === "geode" && geodeMods.speedBoost) {
                 speed *= 1.22;
             }
+            if (launcherMode === "geode" && geodeMods.timeWarp) {
+                speed *= 0.78;
+            }
 
             if (activePracticeMode && score - lastAutoCheckpointScore >= 35) {
                 saveCheckpoint();
@@ -3368,6 +4886,15 @@
             for (const obstacle of obstacles) {
                 const noClip = launcherMode === "hack" && hacks.noclip;
                 if (!noClip && intersects(playerHitbox, obstacle)) {
+                    if (launcherMode === "geode" && geodeMods.shield && !geodeShieldUsed) {
+                        geodeShieldUsed = true;
+                        obstacle.x = -2000;
+                        player.vy = -7.8;
+                        player.y = Math.max(ceilingY + 4, player.y - 20);
+                        cameraPulse = 1;
+                        continue;
+                    }
+
                     if (activePracticeMode && restoreCheckpoint()) {
                         updateScore();
                         break;
@@ -3409,7 +4936,12 @@
                     updateScore();
                     return;
                 }
-                const nextLevel = Math.min(levels.length, activeLevel.id + 1);
+                if (isPublishedSavedLevelId(activeLevel.id)) {
+                    showOverlay("Published Level Complete", `You cleared ${activeLevel.name} with ${activeBuild.name}!`);
+                    updateScore();
+                    return;
+                }
+                const nextLevel = Math.min(TOTAL_LEVELS, activeLevel.id + 1);
                 if (nextLevel > unlockedLevel) {
                     unlockedLevel = nextLevel;
                     saveUnlockedLevel(unlockedLevel);
@@ -3417,7 +4949,7 @@
                 updateSelectors();
                 showOverlay(
                     "Level Complete",
-                    activeLevel.id === levels.length
+                    activeLevel.id === TOTAL_LEVELS
                         ? `You cleared the final level with ${activeBuild.name}! Keep pushing your best score.`
                         : `You beat Level ${activeLevel.id}! Level ${nextLevel} is now unlocked.`
                 );
@@ -3565,6 +5097,10 @@
             ctx.translate(player.x + player.w / 2, player.y + player.h / 2);
             ctx.rotate(player.angle);
 
+            if (launcherMode === "geode" && geodeMods.miniIcon) {
+                ctx.scale(0.78, 0.78);
+            }
+
             if (activeMode && activeMode.id === "wave") {
                 drawWaveIcon();
             } else {
@@ -3580,13 +5116,33 @@
             const rainbow = launcherMode === "geode" && geodeMods.rainbowIcon;
             const hue = Math.floor(((score || 0) * 45) % 360);
 
-            ctx.fillStyle = rainbow ? `hsl(${hue} 88% 66%)` : icon.primary;
-            ctx.strokeStyle = "#111111";
-            ctx.lineWidth = 3;
+            const primary = rainbow ? `hsl(${hue} 88% 66%)` : icon.primary;
+            const accent = rainbow ? `hsl(${(hue + 35) % 360} 96% 86%)` : icon.accent;
+
+            const shell = ctx.createLinearGradient(-half, -half, half, half);
+            shell.addColorStop(0, accent);
+            shell.addColorStop(0.48, primary);
+            shell.addColorStop(1, "#7f8592");
+
+            // Outer cube frame inspired by GD icon tier-list style.
+            ctx.fillStyle = shell;
+            ctx.strokeStyle = "#0c0c0f";
+            ctx.lineWidth = 3.4;
             ctx.fillRect(-half, -half, player.w, player.h);
             ctx.strokeRect(-half, -half, player.w, player.h);
 
-            ctx.fillStyle = rainbow ? `hsl(${(hue + 35) % 360} 96% 86%)` : icon.accent;
+            ctx.fillStyle = "rgba(255, 255, 255, 0.16)";
+            ctx.fillRect(-half + 2, -half + 2, player.w - 4, Math.max(4, player.h * 0.25));
+
+            // Inner face panel.
+            ctx.fillStyle = "rgba(0, 0, 0, 0.20)";
+            ctx.fillRect(-half + 6, -half + 6, player.w - 12, player.h - 12);
+
+            // Core emblem layer.
+            ctx.fillStyle = accent;
+            ctx.strokeStyle = "#111111";
+            ctx.lineWidth = 1.6;
+
             if (icon.detail === "chevron") {
                 ctx.beginPath();
                 ctx.moveTo(-half + 8, -2);
@@ -3652,6 +5208,46 @@
                 ctx.lineTo(-5, -2);
                 ctx.closePath();
                 ctx.fill();
+            }
+
+            // Eye stripe and eyes to match cube-icon look.
+            ctx.fillStyle = "rgba(0, 0, 0, 0.28)";
+            ctx.fillRect(-half + 7, -half + 8, player.w - 14, 10);
+
+            ctx.fillStyle = "#ffffff";
+            ctx.strokeStyle = "#111111";
+            ctx.lineWidth = 1.3;
+            ctx.beginPath();
+            ctx.ellipse(-7, -1, 4.3, 3.2, 0, 0, Math.PI * 2);
+            ctx.ellipse(7, -1, 4.3, 3.2, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = "#111111";
+            const pupilTilt = icon.detail === "fang" || icon.detail === "spire" ? 1.8 : 0;
+            ctx.fillRect(-8.2, -1.7 + pupilTilt, 2.3, 2.3);
+            ctx.fillRect(5.9, -1.7 + pupilTilt, 2.3, 2.3);
+
+            // Mouth variants.
+            ctx.strokeStyle = "#111111";
+            ctx.lineWidth = 2;
+            if (icon.detail === "fang") {
+                ctx.beginPath();
+                ctx.moveTo(-10, 9);
+                ctx.lineTo(-4, 12);
+                ctx.lineTo(0, 9);
+                ctx.lineTo(4, 12);
+                ctx.lineTo(10, 9);
+                ctx.stroke();
+            } else if (icon.detail === "core" || icon.detail === "ring") {
+                ctx.beginPath();
+                ctx.arc(0, 10, 6, 0.2, Math.PI - 0.2, false);
+                ctx.stroke();
+            } else {
+                ctx.beginPath();
+                ctx.moveTo(-8, 11);
+                ctx.lineTo(8, 11);
+                ctx.stroke();
             }
         }
 
@@ -3954,6 +5550,20 @@
             handleInputRelease();
         });
 
+        moreBtn.addEventListener("click", () => {
+            if (!menuGrid) {
+                return;
+            }
+
+            const reachedBottom = (menuGrid.scrollTop + menuGrid.clientHeight) >= (menuGrid.scrollHeight - 8);
+            if (reachedBottom) {
+                menuGrid.scrollTo({ top: 0, behavior: "smooth" });
+                return;
+            }
+
+            menuGrid.scrollBy({ top: Math.max(220, Math.floor(menuGrid.clientHeight * 0.7)), behavior: "smooth" });
+        });
+
         touchJumpBtn.addEventListener("pointerdown", (event) => {
             event.preventDefault();
             handleInputPress();
@@ -3973,7 +5583,21 @@
             handleInputRelease();
         });
 
+        geodeToggleBtn.addEventListener("click", () => {
+            if (launcherMode !== "geode") {
+                return;
+            }
+            geodePanelOpen = !geodePanelOpen;
+            updateGeodePanelVisibility();
+        });
+
         window.addEventListener("keydown", (event) => {
+            if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "s") {
+                event.preventDefault();
+                saveProgressSnapshot(true);
+                return;
+            }
+
             if (builderMode) {
                 if (event.code === "Escape") {
                     event.preventDefault();
@@ -4104,22 +5728,79 @@
 
         window.addEventListener("resize", () => {
             updateTouchJumpButtonVisibility();
+            updateGeodeToggleButtonVisibility();
         });
 
         levelSelect.addEventListener("change", () => {
-            selectedLevel = levelSelect.value === "custom" ? CUSTOM_LEVEL_ID : Number(levelSelect.value);
-            updateSelectors();
-            if (!running) {
-                resetGame();
+            if (levelSelect.value === "custom") {
+                selectedLevel = CUSTOM_LEVEL_ID;
+                updateSelectors();
+                if (!running) {
+                    resetGame();
+                }
+                return;
             }
+
+            const selectedId = Number(levelSelect.value);
+            if (isPublishedSavedLevelId(selectedId)) {
+                selectedLevel = selectedId;
+                updateSelectors();
+                if (!running) {
+                    resetGame();
+                }
+                return;
+            }
+
+            selectCampaignLevel(selectedId);
+        });
+
+        levelSearchInput.addEventListener("input", () => {
+            levelSearchText = levelSearchInput.value;
+            updateSelectors();
+        });
+
+        levelJumpBtn.addEventListener("click", () => {
+            jumpToRequestedLevel();
+        });
+
+        levelJumpInput.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                jumpToRequestedLevel();
+            }
+        });
+
+        levelJumpInput.addEventListener("input", () => {
+            levelJumpInput.setCustomValidity("");
+        });
+
+        rateLevelBtn.addEventListener("click", () => {
+            rateSelectedLevel();
         });
 
         buildSelect.addEventListener("change", () => {
             selectedBuild = buildSelect.value;
+            saveBuild(selectedBuild);
             updateSelectors();
             if (!running) {
                 resetGame();
             }
+        });
+
+        buildJumpInput.addEventListener("input", () => {
+            applyCustomBuildEditor();
+        });
+
+        buildGravityInput.addEventListener("input", () => {
+            applyCustomBuildEditor();
+        });
+
+        buildSpeedInput.addEventListener("input", () => {
+            applyCustomBuildEditor();
+        });
+
+        buildSizeInput.addEventListener("input", () => {
+            applyCustomBuildEditor();
         });
 
         modeSelect.addEventListener("change", () => {
@@ -4137,6 +5818,18 @@
             if (!running) {
                 resetGame();
             }
+        });
+
+        iconPrimaryInput.addEventListener("input", () => {
+            applyCustomIconEditor();
+        });
+
+        iconAccentInput.addEventListener("input", () => {
+            applyCustomIconEditor();
+        });
+
+        iconDetailInput.addEventListener("change", () => {
+            applyCustomIconEditor();
         });
 
         songSelect.addEventListener("change", () => {
@@ -4182,6 +5875,22 @@
             updateSelectors();
         });
 
+        saveLevelBtn.addEventListener("click", () => {
+            saveCurrentAsSavedLevel();
+        });
+
+        loadSavedLevelBtn.addEventListener("click", () => {
+            loadSelectedSavedLevel();
+        });
+
+        publishLevelBtn.addEventListener("click", () => {
+            publishSelectedSavedLevel();
+        });
+
+        deleteSavedLevelBtn.addEventListener("click", () => {
+            deleteSelectedSavedLevel();
+        });
+
         builderLeftBtn.addEventListener("click", () => {
             panBuilder(-220);
         });
@@ -4213,6 +5922,14 @@
 
         logoutAccountBtn.addEventListener("click", () => {
             logoutAccount();
+        });
+
+        ownerPublishBtn.addEventListener("click", () => {
+            publishCustomLevelAsMain();
+        });
+
+        ownerDeleteBtn.addEventListener("click", () => {
+            deleteLastOwnerMainLevel();
         });
 
         accountPassInput.addEventListener("keydown", (event) => {
@@ -4250,6 +5967,18 @@
             if (!geodeMods.globedDemo) {
                 ghostHistory = [];
             }
+        });
+
+        geodeMiniIcon.addEventListener("change", () => {
+            geodeMods.miniIcon = geodeMiniIcon.checked;
+        });
+
+        geodeTimeWarp.addEventListener("change", () => {
+            geodeMods.timeWarp = geodeTimeWarp.checked;
+        });
+
+        geodeShield.addEventListener("change", () => {
+            geodeMods.shield = geodeShield.checked;
         });
 
         hackNoclip.addEventListener("change", () => {
@@ -4326,7 +6055,18 @@
             updateMusicLabel();
         });
 
+        saveProgressBtn.addEventListener("click", () => {
+            saveProgressSnapshot(true);
+        });
+
+        window.addEventListener("beforeunload", () => {
+            saveProgressSnapshot(false);
+        });
+
         clearAllSavedDataOnce();
+
+        ownerAccountName = loadOwnerAccountName();
+        loadOwnerMainLevelsIntoCampaign();
 
         accountsDb = loadAccountsDb();
         currentAccountName = loadCurrentAccountName();
@@ -4336,13 +6076,20 @@
         bestPercentByLevel = loadBestPercentByLevel();
         unlockedLevel = loadUnlockedLevel();
         selectedLevel = 1;
-        selectedBuild = "balanced";
+        customBuild = loadCustomBuild();
+        customIcon = loadCustomIcon();
+        selectedBuild = loadBuild();
         selectedMode = "cube";
         selectedIcon = loadIcon();
         selectedSongChoice = loadSongChoice();
         selectedPracticeMode = "off";
         selectedFeatureSet = "twoTwo";
+        savedLevels = loadSavedLevels();
+        ensureThreeStarterLevels();
+        levelRatingsDb = loadLevelRatingsDb();
         customLevelObstacles = loadCustomLevelObstacles();
+        levelSearchText = "";
+        levelSearchInput.value = "";
         muted = false;
         inputHeld = false;
         justPressed = false;
@@ -4370,11 +6117,19 @@
             rainbowIcon: true,
             autoRetry: false,
             clickFrames: true,
-            globedDemo: false
+            globedDemo: false,
+            miniIcon: false,
+            timeWarp: false,
+            shield: false
         };
+        const loadedProgressSnapshot = loadProgressSnapshot();
+        if (loadedProgressSnapshot) {
+            applyProgressSnapshot(loadedProgressSnapshot);
+        }
         dashOrbs = [];
         cameraPulse = 0;
         geodeClickBufferFrames = 0;
+        geodeShieldUsed = false;
         ghostHistory = [];
         builderMode = false;
         builderTool = "spike";
@@ -4391,6 +6146,8 @@
         updateLauncherNote();
         updateGeodePanelVisibility();
         updateTouchJumpButtonVisibility();
+        updateGeodeToggleButtonVisibility();
+        updateOwnerToolsState();
         overlay.classList.add("hidden");
         loop();
     </script>
